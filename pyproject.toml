@@ -5,7 +5,18 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "argon2-cffi>=25.1.0",
     "fastapi>=0.136.1",
+    "itsdangerous>=2.2.0",
     "jinja2>=3.1.6",
+    "pydantic-settings>=2.14.0",
+    "python-multipart>=0.0.27",
+    "sqlalchemy>=2.0",
     "uvicorn[standard]>=0.46.0",
+]
+
+[dependency-groups]
+dev = [
+    "httpx>=0.28.1",
+    "pytest>=9.0.3",
 ]
