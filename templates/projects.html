@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Projects · {{ site.name }}{% endblock %}
+
+{% block content %}
+<h1>Projects</h1>
+<ul class="project-list">
+  {% for p in projects %}
+    <li class="project-card">
+      <h2><a href="{{ p.link }}">{{ p.title }}</a></h2>
+      <p>{{ p.description }}</p>
+    </li>
+  {% endfor %}
+</ul>
+{% endblock %}

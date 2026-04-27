@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}{{ site.name }}{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', path='styles.css') }}">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="/">{{ site.name }}</a>
+    <nav class="site-nav">
+      {% set nav = [('home', '/', 'Home'),
+                    ('projects', '/projects', 'Projects'),
+                    ('contact', '/contact', 'Contact'),
+                    ('resume', '/resume', 'Resume')] %}
+      {% for slug, href, label in nav %}
+        <a href="{{ href }}"{% if slug == current_page %} aria-current="page"{% endif %}>{{ label }}</a>
+      {% endfor %}
+    </nav>
+  </header>
+
+  <main class="site-main">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer">
+    <small>&copy; {{ site.name }}</small>
+  </footer>
+</body>
+</html>
