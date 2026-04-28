@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}{{ post.title }} · {{ site.name }}{% endblock %}
+
+{% block content %}
+<article class="blog-post">
+  {% if not post.published %}
+    <p class="muted">Draft — not visible to the public.</p>
+  {% endif %}
+  <h1>{{ post.title }}</h1>
+  {% if post.published_at %}
+    <p class="blog-post__date muted">
+      <time datetime="{{ post.published_at.isoformat() }}">
+        {{ post.published_at.strftime('%b %-d, %Y') }}
+      </time>
+    </p>
+  {% endif %}
+
+  <div class="blog-post__body">
+    {{ body_html | safe }}
+  </div>
+</article>
+{% endblock %}

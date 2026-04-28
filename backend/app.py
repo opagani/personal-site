@@ -12,6 +12,7 @@ from starlette.middleware.sessions import SessionMiddleware
 from backend.db import Base, SessionLocal, engine
 from backend.models import ResumeMeta, SiteMeta, User
 from backend.routes.admin import router as admin_router
+from backend.routes.blog import router as blog_router
 from backend.routes.public import router as public_router
 from backend.settings import settings
 
@@ -79,4 +80,5 @@ app.add_middleware(
 
 app.mount("/static", StaticFiles(directory=ROOT / "frontend" / "static"), name="static")
 app.include_router(public_router)
+app.include_router(blog_router)
 app.include_router(admin_router)

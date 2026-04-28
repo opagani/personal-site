@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Blog · {{ site.name }}{% endblock %}
+
+{% block content %}
+<h1>Blog</h1>
+
+{% if posts %}
+  <ul class="blog-list">
+    {% for p in posts %}
+      <li class="blog-list__item">
+        <h2><a href="/blog/{{ p.slug }}">{{ p.title }}</a></h2>
+        {% if p.published_at %}
+          <p class="blog-list__date muted">
+            <time datetime="{{ p.published_at.isoformat() }}">
+              {{ p.published_at.strftime('%b %-d, %Y') }}
+            </time>
+          </p>
+        {% endif %}
+        {% if p.excerpt %}
+          <p>{{ p.excerpt }}</p>
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p class="muted">No posts yet.</p>
+{% endif %}
+{% endblock %}
