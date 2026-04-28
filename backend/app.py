@@ -99,6 +99,32 @@ app.add_middleware(
     https_only=(settings.env == "prod"),
 )
 
+# Temporary diagnostic endpoint — remove once the static-deploy issue is sorted.
+@app.get("/_debug/static", include_in_schema=False)
+def _debug_static_endpoint():
+    import os
+
+    static_dir = ROOT / "frontend" / "static"
+    return {
+        "root": str(ROOT),
+        "cwd": os.getcwd(),
+        "root_exists": ROOT.is_dir(),
+        "root_listing": sorted(os.listdir(ROOT)) if ROOT.is_dir() else None,
+        "frontend_exists": (ROOT / "frontend").is_dir(),
+        "frontend_listing": (
+            sorted(os.listdir(ROOT / "frontend"))
+            if (ROOT / "frontend").is_dir()
+            else None
+        ),
+        "static_dir_exists": static_dir.is_dir(),
+        "static_dir_files": (
+            sorted(os.listdir(static_dir)) if static_dir.is_dir() else None
+        ),
+        "styles_css_exists": (static_dir / "styles.css").is_file(),
+        "__file__": __file__,
+    }
+
+
 app.mount("/static", StaticFiles(directory=ROOT / "frontend" / "static"), name="static")
 app.include_router(public_router)
 app.include_router(blog_router)
