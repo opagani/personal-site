@@ -51,6 +51,8 @@ def test_public_contact_reflects_link_changes(signed_in_client, client, get_csrf
         data={"csrf": csrf, "label": "Email", "url": "mailto:x@example.com", "position": "0"},
         follow_redirects=False,
     )
-    r = client.get("/contact")
-    assert "Email" in r.text
-    assert "mailto:x@example.com" in r.text
+    # The public site is now a SPA; verify via the JSON API instead of HTML.
+    r = client.get("/api/links")
+    rows = r.json()
+    labels = {l["label"]: l["url"] for l in rows}
+    assert labels.get("Email") == "mailto:x@example.com"

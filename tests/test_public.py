@@ -1,75 +1,12 @@
-"""Public-route tests use the shared `client` fixture from conftest.py and
-add their own seeded projects/links via the underlying db_factory."""
-
-import pytest
-
-from backend.models import Link, Project
-
-
-@pytest.fixture
-def client(client, db_factory):
-    """Extend the shared client fixture with a seeded project + link."""
-    Session = db_factory
-    with Session() as s:
-        s.add(
-            Project(
-                title="Note G",
-                description="The first algorithm.",
-                link="https://example.com",
-                position=0,
-            )
-        )
-        s.add(Link(label="GitHub", url="https://github.com/ada", position=0))
-        s.commit()
-    return client
-
-
-def test_home_renders_site_meta(client):
-    r = client.get("/")
-    assert r.status_code == 200
-    assert "Ada Lovelace" in r.text
-    assert "Mathematician" in r.text
-    assert 'aria-current="page"' in r.text
-
-
-def test_home_uses_seeded_bio(client):
-    r = client.get("/")
-    assert "Notes." in r.text
-
-
-def test_projects_renders_db_rows(client):
-    r = client.get("/projects")
-    assert r.status_code == 200
-    assert "Note G" in r.text
-    assert "The first algorithm." in r.text
-
-
-def test_contact_renders_links(client):
-    r = client.get("/contact")
-    assert r.status_code == 200
-    assert "GitHub" in r.text
-    assert "https://github.com/ada" in r.text
-
-
-def test_resume_renders_summary_and_handles_missing_pdf(client, db_factory):
-    # Clear pdf_path on the seeded singleton so the "missing PDF" branch is
-    # exercised deterministically regardless of whether a real resume.pdf
-    # exists in frontend/static.
-    from backend.models import ResumeMeta
-
-    Session = db_factory
-    with Session() as s:
-        rm = s.get(ResumeMeta, 1)
-        rm.pdf_path = None
-        s.commit()
-
-    r = client.get("/resume")
-    assert r.status_code == 200
-    assert "Summary text." in r.text
-    assert "PDF not yet uploaded" in r.text
+"""SPA-era public tests. The public site is now a React SPA; the backend
+serves /api/* (covered in test_api.py) and a catch-all that returns the
+built SPA's index.html (covered in test_spa_fallback.py). This file keeps
+the small set of cross-cutting checks that don't fit naturally into either."""
 
 
 def test_static_styles_served(client):
+    # frontend/static/styles.css is now used by the admin templates only,
+    # but the mount must keep working.
     r = client.get("/static/styles.css")
     assert r.status_code == 200
     assert r.headers["content-type"].startswith("text/css")

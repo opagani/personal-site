@@ -1,38 +1,68 @@
 # Personal portfolio
 
-A small FastAPI + Jinja site with five public pages (home, projects, blog, contact, resume) and an admin area to edit content + moderate comments. SQLite for storage.
+A small site with five public pages (home, projects, blog, contact, resume) and an admin area to edit content + moderate comments. The **public site is a React + TypeScript SPA** (Vite-built) backed by a JSON API; the **admin area stays server-rendered Jinja**. SQLite for storage.
 
 ## Quick start
 
 ```bash
+# Backend
 uv sync
 cp .env.example .env                            # then edit SECRET_KEY at minimum
 uv run python -m backend.cli create-admin       # creates the single admin user
-uv run python main.py                           # serves http://127.0.0.1:8000
+
+# Frontend (SPA build for production-shape serving)
+( cd frontend-spa && npm ci )
+scripts/build-frontend.sh                       # produces frontend-spa/dist/
+
+# Run (single process, serves SPA + API + admin)
+uv run python main.py                           # http://127.0.0.1:8000
 ```
 
 Sign in at <http://127.0.0.1:8000/admin/login>.
+
+### Dev mode (HMR for the SPA)
+
+In one terminal:
+
+```bash
+uv run python main.py        # FastAPI on :8000 (API + admin)
+```
+
+In another:
+
+```bash
+( cd frontend-spa && npm run dev )    # Vite on :5173 with HMR + proxy to :8000
+```
+
+Then browse <http://127.0.0.1:5173/> for HMR. Admin still works at <http://127.0.0.1:5173/admin/login> (proxied to FastAPI).
 
 ## Layout
 
 ```
 backend/                 Python app
-  app.py                 FastAPI factory + middleware + seed
+  app.py                 FastAPI factory + middleware + seed; mounts /assets and SPA catch-all
   settings.py            env-var config (pydantic-settings)
   db.py                  SQLAlchemy engine + Session + get_db dep
   models.py              ORM models
   auth.py                password hashing + CSRF helpers
-  routes/public.py       /, /projects, /contact, /resume
-  routes/blog.py         /blog, /blog/{slug}, comment submission
-  routes/admin.py        /admin/* — auth-gated CRUD + comment moderation
+  routes/api.py          JSON API for the SPA (site, projects, links, resume, blog list/detail/comments)
+  routes/admin.py        /admin/* — auth-gated CRUD + comment moderation (Jinja)
+  routes/spa.py          catch-all that returns frontend-spa/dist/index.html
   markdown.py            shared Markdown → HTML helper
   blog_utils.py          slugify + unique_slug
-  cli.py                 `python -m backend.cli create-admin`
+  cli.py                 `python -m backend.cli create-admin` + `build-resume-pdf`
 frontend/
-  templates/             Jinja templates (public/ and admin/)
-  static/styles.css      single stylesheet
-tests/                   pytest suite
+  templates/admin/       Jinja templates for the admin area only
+  static/styles.css      stylesheet for admin pages + the resume PDFs
+frontend-spa/            React + TS + Vite project (public site)
+  src/api.ts             typed fetch helpers, all endpoints under /api/*
+  src/types.ts           shared response shapes
+  src/components/        Header, Footer (theme toggle, brand, footer link)
+  src/pages/             Home, Projects, Contact, Resume, BlogList, BlogPost, NotFound
+  src/styles.css         vanilla CSS (ported from the old Jinja stylesheet)
+tests/                   pytest suite (backend only — SPA tests TBD)
 main.py                  uvicorn launcher (`from backend.app import app`)
+scripts/build-frontend.sh   `npm ci && npm run build` inside frontend-spa/
 ```
 
 ## Run the tests

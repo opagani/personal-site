@@ -88,9 +88,10 @@ def test_public_projects_reflects_db_changes(signed_in_client, client, get_csrf)
         },
         follow_redirects=False,
     )
-    r = client.get("/projects")
-    assert "Visible" in r.text
-    assert "Public copy." in r.text
+    # SPA-era: verify via JSON API.
+    r = client.get("/api/projects")
+    titles = {p["title"]: p["description"] for p in r.json()}
+    assert titles.get("Visible") == "Public copy."
 
 
 def test_get_unknown_project_returns_404(signed_in_client):

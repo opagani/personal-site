@@ -13,8 +13,7 @@ from backend.db import Base, SessionLocal, engine
 from backend.models import ResumeMeta, SiteMeta, User
 from backend.routes.admin import router as admin_router
 from backend.routes.api import router as api_router
-from backend.routes.blog import router as blog_router
-from backend.routes.public import router as public_router
+from backend.routes.spa import router as spa_router
 from backend.settings import settings
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -80,7 +79,13 @@ app.add_middleware(
 )
 
 app.mount("/static", StaticFiles(directory=ROOT / "frontend" / "static"), name="static")
-app.include_router(public_router)
-app.include_router(blog_router)
-app.include_router(admin_router)
-app.include_router(api_router)
+
+# Vite-built SPA assets. Pre-create the directory so FastAPI boots before
+# the first build (the file content gets replaced by `npm run build`).
+_spa_assets_dir = ROOT / "frontend-spa" / "dist" / "assets"
+_spa_assets_dir.mkdir(parents=True, exist_ok=True)
+app.mount("/assets", StaticFiles(directory=_spa_assets_dir), name="assets")
+
+app.include_router(api_router)         # /api/*
+app.include_router(admin_router)       # /admin/*
+app.include_router(spa_router)         # catch-all → SPA index.html (LAST)
