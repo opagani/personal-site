@@ -16,7 +16,7 @@ from backend.auth import (
     verify_password,
 )
 from backend.db import get_db
-from backend.models import SiteMeta, User
+from backend.models import ResumeMeta, SiteMeta, User
 
 ROOT = Path(__file__).resolve().parent.parent.parent
 templates = Jinja2Templates(directory=ROOT / "frontend" / "templates")
@@ -118,3 +118,81 @@ def dashboard(
             "current_page": None,
         },
     )
+
+
+# --- site_meta editor ---
+
+
+@router.get("/site")
+def site_form(
+    request: Request,
+    db: Session = Depends(get_db),
+    user: User = Depends(requires_admin),
+):
+    return templates.TemplateResponse(
+        request,
+        "admin/site_form.html",
+        {
+            "site": _site_meta(db),
+            "user": user,
+            "csrf_token": ensure_csrf_token(request),
+            "current_page": None,
+        },
+    )
+
+
+@router.post("/site")
+def site_save(
+    request: Request,
+    db: Session = Depends(get_db),
+    user: User = Depends(requires_admin_post),
+    name: str = Form(...),
+    headline: str = Form(...),
+    bio: str = Form(...),
+    avatar_url: str = Form(""),
+):
+    sm = db.scalar(select(SiteMeta).where(SiteMeta.id == 1))
+    sm.name = name
+    sm.headline = headline
+    sm.bio = bio
+    sm.avatar_url = avatar_url or None
+    db.commit()
+    return RedirectResponse(url="/admin/site", status_code=303)
+
+
+# --- resume_meta editor ---
+
+
+@router.get("/resume")
+def resume_form(
+    request: Request,
+    db: Session = Depends(get_db),
+    user: User = Depends(requires_admin),
+):
+    rm = db.scalar(select(ResumeMeta).where(ResumeMeta.id == 1))
+    return templates.TemplateResponse(
+        request,
+        "admin/resume_form.html",
+        {
+            "site": _site_meta(db),
+            "resume": rm,
+            "user": user,
+            "csrf_token": ensure_csrf_token(request),
+            "current_page": None,
+        },
+    )
+
+
+@router.post("/resume")
+def resume_save(
+    request: Request,
+    db: Session = Depends(get_db),
+    user: User = Depends(requires_admin_post),
+    summary: str = Form(...),
+    pdf_path: str = Form(""),
+):
+    rm = db.scalar(select(ResumeMeta).where(ResumeMeta.id == 1))
+    rm.summary = summary
+    rm.pdf_path = pdf_path or None
+    db.commit()
+    return RedirectResponse(url="/admin/resume", status_code=303)

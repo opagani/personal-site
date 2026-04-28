@@ -1,0 +1,24 @@
+{% extends "admin/base.html" %}
+{% block title %}Edit site · {{ site.name }}{% endblock %}
+
+{% block admin %}
+<p><a href="/admin">← back to dashboard</a></p>
+<h1>Edit site</h1>
+
+<form method="post" action="/admin/site" class="admin-form">
+  <input type="hidden" name="csrf" value="{{ csrf_token }}">
+  <label>Name
+    <input name="name" value="{{ site.name }}" required>
+  </label>
+  <label>Headline
+    <input name="headline" value="{{ site.headline }}" required>
+  </label>
+  <label>Bio
+    <textarea name="bio" rows="6" required>{{ site.bio }}</textarea>
+  </label>
+  <label>Avatar URL (optional)
+    <input name="avatar_url" value="{{ site.avatar_url or '' }}">
+  </label>
+  <button type="submit">Save</button>
+</form>
+{% endblock %}
