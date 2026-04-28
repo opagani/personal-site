@@ -8,6 +8,7 @@ from fastapi.staticfiles import StaticFiles
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 from starlette.middleware.sessions import SessionMiddleware
+from uvicorn.middleware.proxy_headers import ProxyHeadersMiddleware
 
 from backend.db import Base, SessionLocal, engine
 from backend.models import ResumeMeta, SiteMeta, User
@@ -90,6 +91,11 @@ app.add_middleware(
     same_site="lax",
     https_only=(settings.env == "prod"),
 )
+
+# Honor X-Forwarded-Proto/For from any upstream proxy (Railway terminates TLS
+# at the edge). Added AFTER SessionMiddleware so it wraps it — runs first on
+# inbound, patching scope["scheme"] to "https" before anything generates URLs.
+app.add_middleware(ProxyHeadersMiddleware, trusted_hosts="*")
 
 app.mount("/static", StaticFiles(directory=ROOT / "frontend" / "static"), name="static")
 # Some platforms (Railway/Fastly) intercept /static/* at the edge. Mount the
