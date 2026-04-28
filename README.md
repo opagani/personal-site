@@ -65,3 +65,21 @@ Sign into `/admin`. The dashboard links to:
 - CSRF: per-session token embedded in every form's hidden `csrf` field. Verified on POST.
 - Single-admin: the CLI refuses to create a second user.
 - SQLite FK enforcement: `backend/db.py` registers a global `connect` listener that runs `PRAGMA foreign_keys=ON` on every SQLite connection so cascade deletes actually fire.
+
+## Deploy (Railway)
+
+1. **Sign in** at <https://railway.com> with GitHub. **New Project → Deploy from GitHub** → pick this repo.
+2. **Add a Volume**: service → **Volumes** → **+ New Volume**, mount path **`/data`**, 1 GB is plenty. (SQLite lives here so it survives redeploys.)
+3. **Variables** (service → Variables):
+   - `ENV=prod`
+   - `SECRET_KEY=` — generate one locally: `python -c "import secrets; print(secrets.token_urlsafe(32))"`
+   - `DATABASE_URL=sqlite:////data/site.db` *(four slashes — absolute path inside the volume)*
+4. Railway uses the included `Procfile` to start uvicorn on `$PORT`. Wait for the build to go green; click **View** to open the assigned `*.up.railway.app` URL.
+5. **Bootstrap the admin user** — open the service's shell/run-command and run:
+   ```
+   python -m backend.cli create-admin --username <you> --password <pw>
+   ```
+6. Sign in at `https://<your-app>.up.railway.app/admin/login`.
+7. *(Optional)* **Custom domain**: Settings → Networking → Custom Domain. HTTPS is auto-issued.
+
+Expected cost for a low-traffic personal site: roughly $3–5/mo on Railway's usage-based pricing.
