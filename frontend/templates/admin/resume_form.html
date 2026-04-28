@@ -8,7 +8,8 @@
 <form method="post" action="/admin/resume" class="admin-form">
   <input type="hidden" name="csrf" value="{{ csrf_token }}">
   <label>Summary
-    <textarea name="summary" rows="6" required>{{ resume.summary }}</textarea>
+    <textarea name="summary" rows="12" required>{{ resume.summary }}</textarea>
+    <small class="muted">Separate paragraphs with a blank line.</small>
   </label>
   <label>PDF path (e.g. <code>/static/resume.pdf</code>)
     <input name="pdf_path" value="{{ resume.pdf_path or '' }}">
