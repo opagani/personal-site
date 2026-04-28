@@ -225,10 +225,8 @@ def test_approve_comment_makes_it_public(
         assert c.approved is True
         assert c.approved_at is not None
 
-    # SPA-era: approved comments now come back via the JSON API.
-    r = client.get("/api/blog/posts/m")
-    bodies = [c["body"] for c in r.json()["comments"]]
-    assert "Awaiting review" in bodies
+    r = client.get("/blog/m")
+    assert "Awaiting review" in r.text
 
 
 def test_delete_comment_from_admin(signed_in_client, db_factory):

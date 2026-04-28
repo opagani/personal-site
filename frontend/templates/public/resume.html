@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Resume · {{ site.name }}{% endblock %}
+
+{% block content %}
+<h1>Resume</h1>
+<div class="resume-body">
+  {{ summary_html | safe }}
+</div>
+{% if resume_pdf_available %}
+  <p><a class="button" href="{{ resume.pdf_path }}" download>Download PDF</a></p>
+{% else %}
+  <p class="muted">PDF not yet uploaded. Drop one at <code>frontend/static/resume.pdf</code> to enable the download link.</p>
+{% endif %}
+{% endblock %}

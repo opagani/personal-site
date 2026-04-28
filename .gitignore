@@ -18,8 +18,3 @@ site.db
 
 # Claude local config (machine-specific permissions, skills cache)
 .claude/
-
-# SPA build artifacts and tooling
-frontend-spa/node_modules/
-frontend-spa/dist/
-frontend-spa/.vite/
