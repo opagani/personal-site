@@ -206,27 +206,71 @@ a:hover { text-decoration: underline; }
   gap: 0.35rem;
   align-items: center;
 }
-.site-footer__owner { font-size: 0.8rem; }
+.site-footer__owner { font-size: 0.8rem; margin-top: 0.25rem; }
 
 .footer-btn {
-  display: inline-block;
-  padding: 0.3rem 0.8rem;
-  border: 1px solid var(--border);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 1rem;
   border-radius: 999px;
-  background: var(--card-bg);
-  color: var(--muted);
   font-size: 0.8rem;
-  font-weight: 500;
+  font-weight: 600;
+  letter-spacing: 0.02em;
   text-decoration: none;
-  transition: border-color 0.15s, color 0.15s, background 0.15s;
+  cursor: pointer;
+  background: var(--accent);
+  color: var(--bg);
+  border: 1px solid transparent;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    background 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease;
+}
+.footer-btn::before {
+  content: "";
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  background: currentColor;
+  /* tiny pencil glyph */
+  -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path d='M11.7 1.3a1 1 0 0 1 1.4 0l1.6 1.6a1 1 0 0 1 0 1.4L5.5 13.5l-3.4.6.6-3.4 9-9zM10.5 4 12 5.5'/></svg>") center/contain no-repeat;
+          mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path d='M11.7 1.3a1 1 0 0 1 1.4 0l1.6 1.6a1 1 0 0 1 0 1.4L5.5 13.5l-3.4.6.6-3.4 9-9zM10.5 4 12 5.5'/></svg>") center/contain no-repeat;
 }
 .footer-btn:hover {
-  color: var(--fg);
-  border-color: var(--fg);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
   text-decoration: none;
 }
+.footer-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+.footer-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Ghost: outlined, subdued — used for the sign-in pre-auth state. */
 .footer-btn--ghost {
   background: transparent;
+  color: var(--muted);
+  border-color: var(--border);
+  box-shadow: none;
+}
+.footer-btn--ghost::before {
+  /* lock icon for sign-in */
+  -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path d='M5 7V5a3 3 0 1 1 6 0v2h.5a1.5 1.5 0 0 1 1.5 1.5v5A1.5 1.5 0 0 1 11.5 15h-7A1.5 1.5 0 0 1 3 13.5v-5A1.5 1.5 0 0 1 4.5 7H5zm1 0h4V5a2 2 0 1 0-4 0v2z'/></svg>") center/contain no-repeat;
+          mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path d='M5 7V5a3 3 0 1 1 6 0v2h.5a1.5 1.5 0 0 1 1.5 1.5v5A1.5 1.5 0 0 1 11.5 15h-7A1.5 1.5 0 0 1 3 13.5v-5A1.5 1.5 0 0 1 4.5 7H5zm1 0h4V5a2 2 0 1 0-4 0v2z'/></svg>") center/contain no-repeat;
+}
+.footer-btn--ghost:hover {
+  color: var(--fg);
+  border-color: var(--fg);
+  background: var(--card-bg);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 }
 
 /* --- Admin --- */
