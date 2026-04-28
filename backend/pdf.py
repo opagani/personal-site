@@ -113,7 +113,7 @@ def build_pdf_and_update_db(db: Session, out_path: Path = DEFAULT_OUT) -> Path:
     path = build_pdf(db, out_path)
     rm = db.scalar(select(ResumeMeta).where(ResumeMeta.id == 1))
     if rm is not None:
-        # path served at /static/<filename>
-        rm.pdf_path = "/static/" + path.name
+        # path served at /assets/<filename> — Railway's edge intercepts /static/*
+        rm.pdf_path = "/assets/" + path.name
         db.commit()
     return path

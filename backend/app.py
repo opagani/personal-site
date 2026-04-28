@@ -32,7 +32,7 @@ DEFAULT_RESUME = {
         "A one-paragraph summary of your background, skills, and what you're looking "
         "for. The full resume is available as a PDF download below."
     ),
-    "pdf_path": "/static/resume.pdf",
+    "pdf_path": "/assets/resume.pdf",
 }
 
 
@@ -42,6 +42,18 @@ def _seed_singletons(db: Session) -> None:
     if db.scalar(select(ResumeMeta).where(ResumeMeta.id == 1)) is None:
         db.add(ResumeMeta(id=1, **DEFAULT_RESUME))
     db.commit()
+
+
+def _migrate_pdf_paths(db: Session) -> None:
+    """One-time: rewrite legacy pdf_path values from /static/ to /assets/.
+
+    Railway's edge intercepts /static/* and never forwards to the origin, so
+    any /static/X URL stored in the DB became unreachable. Idempotent — safe
+    to run on every startup."""
+    rm = db.scalar(select(ResumeMeta).where(ResumeMeta.id == 1))
+    if rm and rm.pdf_path and rm.pdf_path.startswith("/static/"):
+        rm.pdf_path = "/assets/" + rm.pdf_path[len("/static/") :]
+        db.commit()
 
 
 def _warn_if_no_admin(db: Session) -> None:
@@ -58,32 +70,12 @@ def _resolve_secret_key() -> str:
     return _secrets.token_urlsafe(32)
 
 
-def _debug_static_paths() -> None:
-    """One-shot startup diagnostic for missing static assets on Railway/etc."""
-    static_dir = ROOT / "frontend" / "static"
-    templates_dir = ROOT / "frontend" / "templates"
-    log.warning("STATIC-DEBUG ROOT=%s exists=%s", ROOT, ROOT.is_dir())
-    log.warning(
-        "STATIC-DEBUG frontend/=%s frontend/static/=%s frontend/templates/=%s",
-        (ROOT / "frontend").is_dir(),
-        static_dir.is_dir(),
-        templates_dir.is_dir(),
-    )
-    if static_dir.is_dir():
-        names = sorted(p.name for p in static_dir.iterdir())
-        log.warning("STATIC-DEBUG contents of frontend/static/: %s", names)
-    log.warning(
-        "STATIC-DEBUG styles.css exists=%s",
-        (static_dir / "styles.css").is_file(),
-    )
-
-
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    _debug_static_paths()
     Base.metadata.create_all(engine)
     with SessionLocal() as db:
         _seed_singletons(db)
+        _migrate_pdf_paths(db)
         _warn_if_no_admin(db)
     yield
 
@@ -98,33 +90,6 @@ app.add_middleware(
     same_site="lax",
     https_only=(settings.env == "prod"),
 )
-
-# Temporary diagnostic endpoint — remove once the static-deploy issue is sorted.
-@app.get("/_debug/static", include_in_schema=False)
-def _debug_static_endpoint():
-    import os
-
-    static_dir = ROOT / "frontend" / "static"
-    return {
-        "root": str(ROOT),
-        "cwd": os.getcwd(),
-        "root_exists": ROOT.is_dir(),
-        "static_dir_exists": static_dir.is_dir(),
-        "static_dir_files": (
-            sorted(os.listdir(static_dir)) if static_dir.is_dir() else None
-        ),
-        "styles_css_exists": (static_dir / "styles.css").is_file(),
-        "__file__": __file__,
-        "routes": [
-            {
-                "path": getattr(r, "path", None),
-                "name": getattr(r, "name", None),
-                "type": type(r).__name__,
-            }
-            for r in app.routes
-        ],
-    }
-
 
 app.mount("/static", StaticFiles(directory=ROOT / "frontend" / "static"), name="static")
 # Some platforms (Railway/Fastly) intercept /static/* at the edge. Mount the
