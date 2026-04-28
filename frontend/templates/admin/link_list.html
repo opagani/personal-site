@@ -1,0 +1,26 @@
+{% extends "admin/base.html" %}
+{% block title %}Contact links · {{ site.name }}{% endblock %}
+
+{% block admin %}
+<p><a href="/admin">← back to dashboard</a></p>
+<h1>Contact links</h1>
+<p><a class="button" href="/admin/links/new">+ New link</a></p>
+
+{% if links %}
+  <ul class="admin-list">
+    {% for l in links %}
+      <li>
+        <strong><a href="/admin/links/{{ l.id }}">{{ l.label }}</a></strong>
+        <span class="muted">→ {{ l.url }} (position {{ l.position }})</span>
+        <form method="post" action="/admin/links/{{ l.id }}/delete" style="display:inline">
+          <input type="hidden" name="csrf" value="{{ csrf_token }}">
+          <button class="link-button" type="submit"
+                  onclick="return confirm('Delete &quot;{{ l.label }}&quot;?');">delete</button>
+        </form>
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p class="muted">No links yet.</p>
+{% endif %}
+{% endblock %}

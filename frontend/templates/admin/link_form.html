@@ -1,0 +1,21 @@
+{% extends "admin/base.html" %}
+{% block title %}{{ "New" if is_new else "Edit" }} link · {{ site.name }}{% endblock %}
+
+{% block admin %}
+<p><a href="/admin/links">← back to links</a></p>
+<h1>{{ "New link" if is_new else "Edit link" }}</h1>
+
+<form method="post" action="{{ '/admin/links/new' if is_new else '/admin/links/' ~ link.id }}" class="admin-form">
+  <input type="hidden" name="csrf" value="{{ csrf_token }}">
+  <label>Label
+    <input name="label" value="{{ link.label or '' }}" required>
+  </label>
+  <label>URL
+    <input name="url" value="{{ link.url or '' }}" required>
+  </label>
+  <label>Position (lower = earlier)
+    <input name="position" type="number" value="{{ link.position if link.position is not none else 0 }}">
+  </label>
+  <button type="submit">{{ "Create" if is_new else "Save" }}</button>
+</form>
+{% endblock %}

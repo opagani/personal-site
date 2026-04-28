@@ -17,7 +17,7 @@ from backend.auth import (
     verify_password,
 )
 from backend.db import get_db
-from backend.models import Project, ResumeMeta, SiteMeta, User
+from backend.models import Link, Project, ResumeMeta, SiteMeta, User
 
 ROOT = Path(__file__).resolve().parent.parent.parent
 templates = Jinja2Templates(directory=ROOT / "frontend" / "templates")
@@ -317,3 +317,120 @@ def project_delete(
     db.delete(p)
     db.commit()
     return RedirectResponse(url="/admin/projects", status_code=303)
+
+
+# --- links CRUD ---
+
+
+@router.get("/links")
+def links_list(
+    request: Request,
+    db: Session = Depends(get_db),
+    user: User = Depends(requires_admin),
+):
+    rows = db.scalars(select(Link).order_by(Link.position, Link.id)).all()
+    return templates.TemplateResponse(
+        request,
+        "admin/link_list.html",
+        {
+            "site": _site_meta(db),
+            "links": rows,
+            "user": user,
+            "csrf_token": ensure_csrf_token(request),
+            "current_page": None,
+        },
+    )
+
+
+@router.get("/links/new")
+def link_new_form(
+    request: Request,
+    db: Session = Depends(get_db),
+    user: User = Depends(requires_admin),
+):
+    blank = SimpleNamespace(id=None, label="", url="", position=0)
+    return templates.TemplateResponse(
+        request,
+        "admin/link_form.html",
+        {
+            "site": _site_meta(db),
+            "link": blank,
+            "is_new": True,
+            "user": user,
+            "csrf_token": ensure_csrf_token(request),
+            "current_page": None,
+        },
+    )
+
+
+@router.post("/links/new")
+def link_create(
+    request: Request,
+    db: Session = Depends(get_db),
+    user: User = Depends(requires_admin_post),
+    label: str = Form(...),
+    url: str = Form(...),
+    position: int = Form(0),
+):
+    db.add(Link(label=label, url=url, position=position))
+    db.commit()
+    return RedirectResponse(url="/admin/links", status_code=303)
+
+
+@router.get("/links/{link_id}")
+def link_edit_form(
+    link_id: int,
+    request: Request,
+    db: Session = Depends(get_db),
+    user: User = Depends(requires_admin),
+):
+    link = db.scalar(select(Link).where(Link.id == link_id))
+    if link is None:
+        raise HTTPException(status_code=404, detail="Link not found")
+    return templates.TemplateResponse(
+        request,
+        "admin/link_form.html",
+        {
+            "site": _site_meta(db),
+            "link": link,
+            "is_new": False,
+            "user": user,
+            "csrf_token": ensure_csrf_token(request),
+            "current_page": None,
+        },
+    )
+
+
+@router.post("/links/{link_id}")
+def link_update(
+    link_id: int,
+    request: Request,
+    db: Session = Depends(get_db),
+    user: User = Depends(requires_admin_post),
+    label: str = Form(...),
+    url: str = Form(...),
+    position: int = Form(0),
+):
+    link = db.scalar(select(Link).where(Link.id == link_id))
+    if link is None:
+        raise HTTPException(status_code=404, detail="Link not found")
+    link.label = label
+    link.url = url
+    link.position = position
+    db.commit()
+    return RedirectResponse(url="/admin/links", status_code=303)
+
+
+@router.post("/links/{link_id}/delete")
+def link_delete(
+    link_id: int,
+    request: Request,
+    db: Session = Depends(get_db),
+    user: User = Depends(requires_admin_post),
+):
+    link = db.scalar(select(Link).where(Link.id == link_id))
+    if link is None:
+        raise HTTPException(status_code=404, detail="Link not found")
+    db.delete(link)
+    db.commit()
+    return RedirectResponse(url="/admin/links", status_code=303)
