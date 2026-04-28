@@ -51,7 +51,18 @@ def test_contact_renders_links(client):
     assert "https://github.com/ada" in r.text
 
 
-def test_resume_renders_summary_and_handles_missing_pdf(client):
+def test_resume_renders_summary_and_handles_missing_pdf(client, db_factory):
+    # Clear pdf_path on the seeded singleton so the "missing PDF" branch is
+    # exercised deterministically regardless of whether a real resume.pdf
+    # exists in frontend/static.
+    from backend.models import ResumeMeta
+
+    Session = db_factory
+    with Session() as s:
+        rm = s.get(ResumeMeta, 1)
+        rm.pdf_path = None
+        s.commit()
+
     r = client.get("/resume")
     assert r.status_code == 200
     assert "Summary text." in r.text

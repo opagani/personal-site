@@ -1,5 +1,6 @@
 from pathlib import Path
 
+import markdown as _md
 from fastapi import APIRouter, Depends, Request
 from fastapi.templating import Jinja2Templates
 from sqlalchemy import select
@@ -10,6 +11,12 @@ from backend.models import Link, Project, ResumeMeta, SiteMeta
 
 ROOT = Path(__file__).resolve().parent.parent.parent
 templates = Jinja2Templates(directory=ROOT / "frontend" / "templates")
+
+
+def _render_markdown(text: str | None) -> str:
+    if not text:
+        return ""
+    return _md.markdown(text, extensions=["extra", "sane_lists"])
 
 router = APIRouter()
 
@@ -53,12 +60,14 @@ def resume(request: Request, db: Session = Depends(get_db)):
     rmeta = db.scalar(select(ResumeMeta).where(ResumeMeta.id == 1))
     pdf_path_on_disk = ROOT / "frontend" / "static" / "resume.pdf"
     pdf_available = bool(rmeta and rmeta.pdf_path) and pdf_path_on_disk.is_file()
+    summary_html = _render_markdown(rmeta.summary if rmeta else None)
     return templates.TemplateResponse(
         request,
         "public/resume.html",
         {
             "site": site,
             "resume": rmeta,
+            "summary_html": summary_html,
             "resume_pdf_available": pdf_available,
             "current_page": "resume",
         },

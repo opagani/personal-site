@@ -3,15 +3,12 @@
 
 {% block content %}
 <h1>Resume</h1>
-{# Render each blank-line-separated chunk as its own paragraph. #}
-{% for paragraph in (resume.summary or '').split('\n\n') %}
-  {% if paragraph.strip() %}
-    <p>{{ paragraph.strip() }}</p>
-  {% endif %}
-{% endfor %}
+<div class="resume-body">
+  {{ summary_html | safe }}
+</div>
 {% if resume_pdf_available %}
   <p><a class="button" href="{{ resume.pdf_path }}" download>Download PDF</a></p>
 {% else %}
-  <p class="muted">PDF not yet uploaded. Drop one at <code>static/resume.pdf</code> to enable the download link.</p>
+  <p class="muted">PDF not yet uploaded. Drop one at <code>frontend/static/resume.pdf</code> to enable the download link.</p>
 {% endif %}
 {% endblock %}
