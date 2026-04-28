@@ -73,10 +73,24 @@ def _resolve_secret_key() -> str:
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    import os
+
     Base.metadata.create_all(engine)
     with SessionLocal() as db:
         _seed_singletons(db)
         _migrate_pdf_paths(db)
+        # If LOAD_FIXTURE_PATH is set AND the DB has no projects yet, load
+        # content from the JSON fixture. Idempotent on subsequent boots
+        # because once projects exist the load is skipped.
+        fixture_path = os.environ.get("LOAD_FIXTURE_PATH")
+        if fixture_path:
+            from pathlib import Path
+            from backend.fixtures import load_content
+            try:
+                result = load_content(db, Path(fixture_path), only_if_empty=True)
+                log.warning("LOAD_FIXTURE_PATH=%s result=%s", fixture_path, result)
+            except Exception as e:
+                log.error("LOAD_FIXTURE_PATH failed: %s", e)
         _warn_if_no_admin(db)
     yield
 

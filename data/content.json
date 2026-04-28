@@ -1,0 +1,627 @@
+{
+  "version": 1,
+  "site_meta": {
+    "name": "Oscar Pagani",
+    "headline": "Senior Software Engineer · Front-End & Full-Stack",
+    "bio": "Bay Area software engineer. Nearly two decades shipping web tools and consumer products across Yahoo!, Wells Fargo, Pixar Animation Studios, Trulia, and Zillow. Most of my work has been front-end and full-stack — React, TypeScript, Node.js — with a soft spot for internal tools and the people who use them.",
+    "avatar_url": null
+  },
+  "resume_meta": {
+    "summary": "San Francisco Bay Area · [paganio@yahoo.com](mailto:paganio@yahoo.com) · [linkedin.com/in/opagani](https://www.linkedin.com/in/opagani) · [github.com/opagani](https://github.com/opagani)\n\n## Summary\n\nSenior Software Engineer with deep front-end and full-stack experience across **Yahoo!**, **Wells Fargo**, **Pixar Animation Studios**, **Trulia**, and **Zillow**. Specialist in modern JavaScript ecosystems — React, TypeScript, Node.js, GraphQL — with a record of leading initiatives, mentoring engineers, and shipping internal tools and consumer-facing products at scale. Strong cross-functional collaborator across product, design, and platform teams.\n\n## Experience\n\n### Senior Software Engineer · Zillow\n*Aug 2016 – 2023 · San Francisco Bay Area*\n\nLed front-end and full-stack engineering across Zillow Group's rentals product surface — **Zillow Rental Manager, Renter's Insurance, Payments, Applications, and Leases**.\n\n- Designed and built a **landlord-facing admin tool from scratch** to surface policy status, reports, and operational data across the rentals platform.\n- Architected the React front end with **TypeScript, React Query, and React Table**, and a **Node.js + GraphQL** API behind it.\n- Mentored engineers and partnered with product, design, and platform teams to ship features and unblock cross-functional work.\n\n**Stack:** React.js · TypeScript · Node.js · GraphQL · React Query · React Table\n\n### Senior JavaScript Engineer · Trulia\n*Dec 2014 – Jul 2016 · San Francisco Bay Area*\n\nOwned development and maintenance of Trulia's rentals web pages and mobile web experiences.\n\n- Led front-end development for an initiative that began as a hack-week project — surfacing rentals near transit stations — and shipped to production.\n- Modernized the rentals stack with **React.js, ES6, and Webpack** ahead of these tools becoming industry-standard.\n\n**Stack:** React.js · Node.js · ES6 · Webpack\n\n### Front End Web Developer, Studio Tools · Pixar Animation Studios\n*Oct 2011 – Oct 2014 · San Francisco Bay Area*\n\nBuilt internal web tools used across every Pixar production, partnering directly with directors, producers, animators, and artists.\n\n- Designed and shipped a **Content Management System** hosting videos, pictures, and assets for all of Pixar's active films.\n- Built the front end in **JavaScript and Ext JS** and the back end in **Python**.\n- Provided ongoing technical support to studio creatives across multiple departments.\n\n**Stack:** JavaScript · Ext JS · Python\n\n### Front End Web Developer · Wells Fargo\n*2009 – 2011*\n\n- Built bank-internal web applications using **JavaScript, HTML, and CSS**, layered on a custom framework on top of **YUI**.\n- Created responsive web pages spanning multiple Wells Fargo applications.\n\n**Stack:** JavaScript · HTML · CSS · YUI\n\n### Software Engineer · Yahoo!\n*2006 – 2009*\n\nFront-end engineering across three flagship Yahoo! properties — **Yahoo! Answers**, **Yahoo! Video**, and the **online advertising team**.\n\n- Built and maintained tools using **JavaScript, HTML, and CSS**.\n- Integrated the Yahoo! **YUI library** across multiple applications.\n\n**Stack:** JavaScript · HTML · CSS · YUI\n\n## Education\n\n- **Lewis & Clark College** — BS, Mathematics\n- **San Francisco State University** — BS, Electrical Engineering\n\n## Skills\n\n**Languages:** TypeScript · JavaScript · Python · C++ · C · HTML5 · CSS\n\n**Frameworks & libraries:** React.js · Node.js · GraphQL · React Query · React Table · Ext JS · YUI\n\n**Practices:** Front-end architecture · Full-stack development · Mentoring · Cross-functional collaboration\n\n## Languages\n\n- **Spanish** — native / bilingual\n- **Italian** — professional working proficiency",
+    "pdf_path": "/assets/resume-generated.pdf"
+  },
+  "projects": [
+    {
+      "title": "personal-site",
+      "description": "Apr 2026 · Python — Personal portfolio site — FastAPI + Jinja + SQLite. Server-rendered public pages plus a session-authenticated admin area for editing site content from the browser.",
+      "link": "https://github.com/opagani/personal-site",
+      "position": 0
+    },
+    {
+      "title": "02-inflation",
+      "description": "Apr 2026 · Jupyter Notebook — Jupyter Notebook repository.",
+      "link": "https://github.com/opagani/02-inflation",
+      "position": 1
+    },
+    {
+      "title": "alcohol-youth-trends",
+      "description": "Mar 2026 · Python — Youth Alcohol Trends & Beverage Stocks app written in Pandas.",
+      "link": "https://github.com/opagani/alcohol-youth-trends",
+      "position": 2
+    },
+    {
+      "title": "taxi-tips",
+      "description": "Mar 2026 · Python — NY Taxi Tips Pandas app.",
+      "link": "https://github.com/opagani/taxi-tips",
+      "position": 3
+    },
+    {
+      "title": "energy-markets",
+      "description": "Mar 2026 · Python — Energy Markets Pandas app.",
+      "link": "https://github.com/opagani/energy-markets",
+      "position": 4
+    },
+    {
+      "title": "sb-cclc",
+      "description": "Mar 2026 · Python — Second Brain app for the CCLC.",
+      "link": "https://github.com/opagani/sb-cclc",
+      "position": 5
+    },
+    {
+      "title": "second-brain",
+      "description": "Mar 2026 · Python — A best-practice Python application scaffold.",
+      "link": "https://github.com/opagani/second-brain",
+      "position": 6
+    },
+    {
+      "title": "unix-shells",
+      "description": "Jan 2025 · Jupyter Notebook — Unix Shells.",
+      "link": "https://github.com/opagani/unix-shells",
+      "position": 7
+    },
+    {
+      "title": "agent-from-scratch",
+      "description": "Nov 2024 · TypeScript — Build an AI Agent from Scratch.",
+      "link": "https://github.com/opagani/agent-from-scratch",
+      "position": 8
+    },
+    {
+      "title": "ai-with-react-and-next-js",
+      "description": "Nov 2024 · JavaScript — AI with React and Next.js.",
+      "link": "https://github.com/opagani/ai-with-react-and-next-js",
+      "position": 9
+    },
+    {
+      "title": "fem-from-scratch-op",
+      "description": "Nov 2024 · HTML — Building a Website From Scratch.",
+      "link": "https://github.com/opagani/fem-from-scratch-op",
+      "position": 10
+    },
+    {
+      "title": "nextjs-dashboard",
+      "description": "Nov 2024 · TypeScript — Next.js Dashboard.",
+      "link": "https://github.com/opagani/nextjs-dashboard",
+      "position": 11
+    },
+    {
+      "title": "pandas-joins-and-merges",
+      "description": "Oct 2024 · Jupyter Notebook — Pandas Joins and Merges.",
+      "link": "https://github.com/opagani/pandas-joins-and-merges",
+      "position": 12
+    },
+    {
+      "title": "python-exceptions",
+      "description": "Oct 2024 · Jupyter Notebook — Python Exceptions.",
+      "link": "https://github.com/opagani/python-exceptions",
+      "position": 13
+    },
+    {
+      "title": "markov-chain",
+      "description": "Oct 2024 · Python — Markov Chain in Python.",
+      "link": "https://github.com/opagani/markov-chain",
+      "position": 14
+    },
+    {
+      "title": "sk-stepwise",
+      "description": "Oct 2024 · Jupyter Notebook — SK Stepwise project in Python.",
+      "link": "https://github.com/opagani/sk-stepwise",
+      "position": 15
+    },
+    {
+      "title": "professional-python",
+      "description": "Oct 2024 · Jupyter Notebook — Profesional Python.",
+      "link": "https://github.com/opagani/professional-python",
+      "position": 16
+    },
+    {
+      "title": "fastapi-tdd-docker",
+      "description": "Oct 2024 · Python — TDD with FastAPI and Docker.",
+      "link": "https://github.com/opagani/fastapi-tdd-docker",
+      "position": 17
+    },
+    {
+      "title": "professional-xgboost",
+      "description": "Sep 2024 · Jupyter Notebook — Professional XGBoost.",
+      "link": "https://github.com/opagani/professional-xgboost",
+      "position": 18
+    },
+    {
+      "title": "link-to-asyncio-webinar-please",
+      "description": "Sep 2024 · Jupyter Notebook — Python Asyncio.",
+      "link": "https://github.com/opagani/link-to-asyncio-webinar-please",
+      "position": 19
+    },
+    {
+      "title": "Python Decorators",
+      "description": "Sep 2024 · Jupyter Notebook",
+      "link": "https://github.com/opagani/2024-09September-08-decorators",
+      "position": 20
+    },
+    {
+      "title": "Intro to Machine Learning",
+      "description": "Sep 2024 · Jupyter Notebook",
+      "link": "https://github.com/opagani/2024-09September-01-sklearn",
+      "position": 21
+    },
+    {
+      "title": "fullstack-vanilla-javaScript-fem-template",
+      "description": "Aug 2024 · HTML — FullStack Vanilla Javascript.",
+      "link": "https://github.com/opagani/fullstack-vanilla-javaScript-fem-template",
+      "position": 22
+    },
+    {
+      "title": "Intro to FastAPI",
+      "description": "Aug 2024 · Jupyter Notebook",
+      "link": "https://github.com/opagani/2024-08Aug-27-fastapi",
+      "position": 23
+    },
+    {
+      "title": "Scraping with BeautifulSoup and Scrapy",
+      "description": "Aug 2024 · Jupyter Notebook",
+      "link": "https://github.com/opagani/2024-08Aug-26-scraping",
+      "position": 24
+    },
+    {
+      "title": "Polars",
+      "description": "Aug 2024 · Jupyter Notebook",
+      "link": "https://github.com/opagani/2024-08Aug-25-polars",
+      "position": 25
+    },
+    {
+      "title": "Grouping and pivot tables in Pandas",
+      "description": "Aug 2024 · Jupyter Notebook",
+      "link": "https://github.com/opagani/2024-08Aug-21-grouping",
+      "position": 26
+    },
+    {
+      "title": "Python Command Line",
+      "description": "Aug 2024 · Jupyter Notebook",
+      "link": "https://github.com/opagani/2024-08Aug-20-commandline",
+      "position": 27
+    },
+    {
+      "title": "CSV Files in Pandas",
+      "description": "Aug 2024 · Jupyter Notebook",
+      "link": "https://github.com/opagani/2024-08Aug-pandas-csv",
+      "position": 28
+    },
+    {
+      "title": "Pandas Strings",
+      "description": "Aug 2024 · Jupyter Notebook",
+      "link": "https://github.com/opagani/2024-08Aug-pandas-strings",
+      "position": 29
+    },
+    {
+      "title": "Python Design Patterns",
+      "description": "Aug 2024 · Jupyter Notebook",
+      "link": "https://github.com/opagani/2024-08Aug-patterns",
+      "position": 31
+    },
+    {
+      "title": "Method chaining Pandas",
+      "description": "Aug 2024 · Jupyter Notebook",
+      "link": "https://github.com/opagani/https-github.com-opagani-2024-08Aug-cleaning",
+      "position": 32
+    },
+    {
+      "title": "Data Cleaning in Pandas",
+      "description": "Aug 2024 · Jupyter Notebook",
+      "link": "https://github.com/opagani/2024-08Aug-cleaning",
+      "position": 33
+    },
+    {
+      "title": "intermediate-nextjs",
+      "description": "Aug 2024 · TypeScript — Intermediate Next.js.",
+      "link": "https://github.com/opagani/intermediate-nextjs",
+      "position": 34
+    },
+    {
+      "title": "blazing-fast-nextjs-with-rsc",
+      "description": "Jul 2024 · TypeScript — Blazing Fast Next.js with React Server Components.",
+      "link": "https://github.com/opagani/blazing-fast-nextjs-with-rsc",
+      "position": 35
+    },
+    {
+      "title": "complex-state-management-app",
+      "description": "Jul 2024 · JavaScript — Complex State Management App.",
+      "link": "https://github.com/opagani/complex-state-management-app",
+      "position": 36
+    },
+    {
+      "title": "monorepo-workshop",
+      "description": "Jul 2024 · MDX — Monorepo workshop.",
+      "link": "https://github.com/opagani/monorepo-workshop",
+      "position": 37
+    },
+    {
+      "title": "testing-fundamentals",
+      "description": "Jun 2024 · TypeScript — Testing Fundamentals.",
+      "link": "https://github.com/opagani/testing-fundamentals",
+      "position": 38
+    },
+    {
+      "title": "applied-typescript",
+      "description": "Jun 2024 · TypeScript — Applied TypeScript.",
+      "link": "https://github.com/opagani/applied-typescript",
+      "position": 39
+    },
+    {
+      "title": "book-database-sqlalchemy",
+      "description": "Jun 2024 · Python — Book Database SQLAlchemy.",
+      "link": "https://github.com/opagani/book-database-sqlalchemy",
+      "position": 40
+    },
+    {
+      "title": "sqlalchemy-workshop",
+      "description": "Jun 2024 · Python — Python repository.",
+      "link": "https://github.com/opagani/sqlalchemy-workshop",
+      "position": 41
+    },
+    {
+      "title": "fastapi-workshop",
+      "description": "May 2024 · Python — FastAPI Workshop.",
+      "link": "https://github.com/opagani/fastapi-workshop",
+      "position": 42
+    },
+    {
+      "title": "epic-chat",
+      "description": "Nov 2023 · CSS — A React chat app.",
+      "link": "https://github.com/opagani/epic-chat",
+      "position": 43
+    },
+    {
+      "title": "wikipedia-react",
+      "description": "Oct 2023 · TypeScript — A React app that uses the wikipedia API allows you to get a list of articles.",
+      "link": "https://github.com/opagani/wikipedia-react",
+      "position": 44
+    },
+    {
+      "title": "epic-store",
+      "description": "Oct 2023 · JavaScript — Epic store.",
+      "link": "https://github.com/opagani/epic-store",
+      "position": 45
+    },
+    {
+      "title": "palindrome_app",
+      "description": "Sep 2023 · Python — A Flask app that detects palindromes.",
+      "link": "https://github.com/opagani/palindrome_app",
+      "position": 46
+    },
+    {
+      "title": "intro-next-js-v3-app",
+      "description": "Jul 2023 · TypeScript — Next.js v13 App Router app.",
+      "link": "https://github.com/opagani/intro-next-js-v3-app",
+      "position": 47
+    },
+    {
+      "title": "course-python-4-production",
+      "description": "Jun 2023 · Python — Python For Production Course.",
+      "link": "https://github.com/opagani/course-python-4-production",
+      "position": 48
+    },
+    {
+      "title": "cypress-tests",
+      "description": "May 2023 · JavaScript — Cypress tests examples.",
+      "link": "https://github.com/opagani/cypress-tests",
+      "position": 49
+    },
+    {
+      "title": "admin-tool-graphql",
+      "description": "May 2023 · TypeScript — Admin tool graphql and node server.",
+      "link": "https://github.com/opagani/admin-tool-graphql",
+      "position": 50
+    },
+    {
+      "title": "admin-tool-web",
+      "description": "May 2023 · TypeScript — Admin web tool using React, TypeScript, React Query and React Table.",
+      "link": "https://github.com/opagani/admin-tool-web",
+      "position": 51
+    },
+    {
+      "title": "tasks",
+      "description": "Apr 2023 · Python — Fast API repository.",
+      "link": "https://github.com/opagani/tasks",
+      "position": 52
+    },
+    {
+      "title": "ml-with-airbnb-amsterdam",
+      "description": "Apr 2023 · Python — Machine Learning (ML) with Airbnb Amsterdam.",
+      "link": "https://github.com/opagani/ml-with-airbnb-amsterdam",
+      "position": 53
+    },
+    {
+      "title": "airbnb-visualization",
+      "description": "Apr 2023 · Python — Airbnb Data Visualization.",
+      "link": "https://github.com/opagani/airbnb-visualization",
+      "position": 54
+    },
+    {
+      "title": "my-python-project",
+      "description": "Mar 2023 · Python — My python project.",
+      "link": "https://github.com/opagani/my-python-project",
+      "position": 55
+    },
+    {
+      "title": "advanced-sql",
+      "description": "Feb 2023 — Advanced SQL CoRise class.",
+      "link": "https://github.com/opagani/advanced-sql",
+      "position": 56
+    },
+    {
+      "title": "2023-02Feb-12-more-objects",
+      "description": "Feb 2023 · Jupyter Notebook — Jupyter Notebook repository.",
+      "link": "https://github.com/opagani/2023-02Feb-12-more-objects",
+      "position": 57
+    },
+    {
+      "title": "2023-02Feb-05-objects",
+      "description": "Feb 2023 · Jupyter Notebook — Jupyter Notebook repository.",
+      "link": "https://github.com/opagani/2023-02Feb-05-objects",
+      "position": 58
+    },
+    {
+      "title": "unsupervised-predictions-for-airbnb-listings",
+      "description": "Feb 2023 · Python — (Un)Supervised predictions for Airbnb listings.",
+      "link": "https://github.com/opagani/unsupervised-predictions-for-airbnb-listings",
+      "position": 59
+    },
+    {
+      "title": "2023-01Jan-29-functions-for-newbies",
+      "description": "Jan 2023 · Jupyter Notebook — Jupyter Notebook repository.",
+      "link": "https://github.com/opagani/2023-01Jan-29-functions-for-newbies",
+      "position": 60
+    },
+    {
+      "title": "pricing-new-airbnb",
+      "description": "Jan 2023 · Python — Python repository.",
+      "link": "https://github.com/opagani/pricing-new-airbnb",
+      "position": 61
+    },
+    {
+      "title": "airbnb-vis",
+      "description": "Jan 2023 · Python — Python repository.",
+      "link": "https://github.com/opagani/airbnb-vis",
+      "position": 62
+    },
+    {
+      "title": "gatsby-cloud",
+      "description": "Jan 2023 · CSS — Sample DatoCMS website built with GatsbyJS.",
+      "link": "https://github.com/opagani/gatsby-cloud",
+      "position": 63
+    },
+    {
+      "title": "airbnb-pandas",
+      "description": "Dec 2022 · Python — Airbnb using pandas.",
+      "link": "https://github.com/opagani/airbnb-pandas",
+      "position": 64
+    },
+    {
+      "title": "airbnb-amsterdam",
+      "description": "Dec 2022 · Python — Airbnb Amsterdan.",
+      "link": "https://github.com/opagani/airbnb-amsterdam",
+      "position": 65
+    },
+    {
+      "title": "nextjs-blog",
+      "description": "Oct 2022 · TypeScript — Next.js blog.",
+      "link": "https://github.com/opagani/nextjs-blog",
+      "position": 66
+    },
+    {
+      "title": "my-blog-backend",
+      "description": "Mar 2022 · JavaScript — JavaScript repository.",
+      "link": "https://github.com/opagani/my-blog-backend",
+      "position": 67
+    },
+    {
+      "title": "smashing-mag-workshop",
+      "description": "Nov 2021 · HTML — HTML repository.",
+      "link": "https://github.com/opagani/smashing-mag-workshop",
+      "position": 68
+    },
+    {
+      "title": "bb",
+      "description": "Nov 2021 · CSS — Next.js create app.",
+      "link": "https://github.com/opagani/bb",
+      "position": 69
+    },
+    {
+      "title": "projects",
+      "description": "Oct 2021 · HTML — HTML repository.",
+      "link": "https://github.com/opagani/projects",
+      "position": 70
+    },
+    {
+      "title": "asyncio",
+      "description": "Oct 2021 · Jupyter Notebook — Jupyter Notebook repository.",
+      "link": "https://github.com/opagani/asyncio",
+      "position": 71
+    },
+    {
+      "title": "live-threading",
+      "description": "Oct 2021 · Jupyter Notebook — Jupyter Notebook repository.",
+      "link": "https://github.com/opagani/live-threading",
+      "position": 72
+    },
+    {
+      "title": "live-functional",
+      "description": "Sep 2021 · Jupyter Notebook — Jupyter Notebook repository.",
+      "link": "https://github.com/opagani/live-functional",
+      "position": 73
+    },
+    {
+      "title": "live-advanced-objects",
+      "description": "Sep 2021 · Jupyter Notebook — Jupyter Notebook repository.",
+      "link": "https://github.com/opagani/live-advanced-objects",
+      "position": 74
+    },
+    {
+      "title": "smashing-mag-workshop-op",
+      "description": "Sep 2021 · HTML — HTML repository.",
+      "link": "https://github.com/opagani/smashing-mag-workshop-op",
+      "position": 75
+    },
+    {
+      "title": "live-intro-objects",
+      "description": "Sep 2021 · Jupyter Notebook — Jupyter Notebook repository.",
+      "link": "https://github.com/opagani/live-intro-objects",
+      "position": 76
+    },
+    {
+      "title": "adopt-me",
+      "description": "Mar 2021 · CSS — CSS repository.",
+      "link": "https://github.com/opagani/adopt-me",
+      "position": 77
+    },
+    {
+      "title": "next-portfolio",
+      "description": "Mar 2021 · JavaScript — Next.js Portfolio.",
+      "link": "https://github.com/opagani/next-portfolio",
+      "position": 78
+    },
+    {
+      "title": "my-gatsby-blog",
+      "description": "Mar 2021 · JavaScript — My Gatsby Blog.",
+      "link": "https://github.com/opagani/my-gatsby-blog",
+      "position": 79
+    },
+    {
+      "title": "workshop-nextjs",
+      "description": "Nov 2020 · JavaScript — JavaScript repository.",
+      "link": "https://github.com/opagani/workshop-nextjs",
+      "position": 80
+    },
+    {
+      "title": "my-blog",
+      "description": "Jul 2020 · JavaScript — JavaScript repository.",
+      "link": "https://github.com/opagani/my-blog",
+      "position": 81
+    },
+    {
+      "title": "graphql-app-github",
+      "description": "May 2020 — Repository.",
+      "link": "https://github.com/opagani/graphql-app-github",
+      "position": 82
+    },
+    {
+      "title": "gatsbynetlify",
+      "description": "Nov 2018 · CSS — CSS repository.",
+      "link": "https://github.com/opagani/gatsbynetlify",
+      "position": 83
+    },
+    {
+      "title": "snowtooth-client",
+      "description": "Nov 2018 · JavaScript — JavaScript repository.",
+      "link": "https://github.com/opagani/snowtooth-client",
+      "position": 84
+    },
+    {
+      "title": "apollo-graphql-client-code",
+      "description": "Nov 2018 · JavaScript — Apollo GraphQL client code.",
+      "link": "https://github.com/opagani/apollo-graphql-client-code",
+      "position": 85
+    },
+    {
+      "title": "snowtooth-api",
+      "description": "Sep 2018 · JavaScript — Faked ski snow resort API.",
+      "link": "https://github.com/opagani/snowtooth-api",
+      "position": 86
+    },
+    {
+      "title": "complete-intro-to-react",
+      "description": "Aug 2018 · JavaScript — Latest intro to React as August 2018.",
+      "link": "https://github.com/opagani/complete-intro-to-react",
+      "position": 87
+    },
+    {
+      "title": "noted-base",
+      "description": "Aug 2018 · JavaScript — React app for noted base.",
+      "link": "https://github.com/opagani/noted-base",
+      "position": 88
+    },
+    {
+      "title": "using-wordpress",
+      "description": "Apr 2018 · JavaScript — Gatsby.js using wordpress.",
+      "link": "https://github.com/opagani/using-wordpress",
+      "position": 89
+    },
+    {
+      "title": "opagani.github.io",
+      "description": "Apr 2018 · HTML — HTML repository.",
+      "link": "https://github.com/opagani/opagani.github.io",
+      "position": 90
+    },
+    {
+      "title": "opagani-blog",
+      "description": "Apr 2018 · CSS — Oscar Pagani blog written with Gatsby.js.",
+      "link": "https://github.com/opagani/opagani-blog",
+      "position": 91
+    },
+    {
+      "title": "blog",
+      "description": "Nov 2017 · CSS — Oscar Pagani Gatsby Blog.",
+      "link": "https://github.com/opagani/blog",
+      "position": 92
+    },
+    {
+      "title": "react-native-base-components",
+      "description": "Mar 2017 · Objective-C — Objective-C repository.",
+      "link": "https://github.com/opagani/react-native-base-components",
+      "position": 93
+    },
+    {
+      "title": "react-native-components",
+      "description": "Mar 2017 — react-native-ios-components.",
+      "link": "https://github.com/opagani/react-native-components",
+      "position": 94
+    },
+    {
+      "title": "react-native-ios-components",
+      "description": "Mar 2017 — react-native-ios-components.",
+      "link": "https://github.com/opagani/react-native-ios-components",
+      "position": 95
+    },
+    {
+      "title": "omrails",
+      "description": "Nov 2016 · Ruby — The One Month Rails sample project.",
+      "link": "https://github.com/opagani/omrails",
+      "position": 96
+    },
+    {
+      "title": "omruby",
+      "description": "Oct 2016 · Ruby — The One Month Ruby sample project.",
+      "link": "https://github.com/opagani/omruby",
+      "position": 97
+    },
+    {
+      "title": "didactic-doodle",
+      "description": "May 2016 · JavaScript — React redux.",
+      "link": "https://github.com/opagani/didactic-doodle",
+      "position": 98
+    },
+    {
+      "title": "tic-tac-react",
+      "description": "Dec 2015 · JavaScript — JSPM Tic-tac-toe with React/Redux and front end testing with chai and mocha.",
+      "link": "https://github.com/opagani/tic-tac-react",
+      "position": 99
+    }
+  ],
+  "links": [
+    {
+      "label": "LinkedIn",
+      "url": "https://www.linkedin.com/in/opagani",
+      "position": 0
+    },
+    {
+      "label": "Email",
+      "url": "mailto:paganio@yahoo.com",
+      "position": 1
+    },
+    {
+      "label": "GitHub",
+      "url": "https://github.com/opagani",
+      "position": 2
+    }
+  ],
+  "posts": []
+}
