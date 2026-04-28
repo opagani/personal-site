@@ -59,6 +59,17 @@ def _cmd_create_admin(args: argparse.Namespace) -> None:
     create_admin(username, password)
 
 
+def _cmd_build_resume_pdf(args: argparse.Namespace) -> None:
+    from backend.pdf import build_pdf_and_update_db, DEFAULT_OUT
+
+    Base.metadata.create_all(engine)
+    out = DEFAULT_OUT if args.out is None else __import__("pathlib").Path(args.out)
+    with SessionLocal() as db:
+        path = build_pdf_and_update_db(db, out)
+    print(f"Wrote PDF: {path}")
+    print("resume_meta.pdf_path updated to point at the new file.")
+
+
 def main(argv: list[str] | None = None) -> None:
     p = argparse.ArgumentParser(prog="backend.cli")
     sub = p.add_subparsers(dest="cmd", required=True)
@@ -67,6 +78,14 @@ def main(argv: list[str] | None = None) -> None:
     ca.add_argument("--username", help="(falls back to ADMIN_USERNAME or interactive prompt)")
     ca.add_argument("--password", help="(falls back to ADMIN_PASSWORD or interactive prompt)")
     ca.set_defaults(func=_cmd_create_admin)
+
+    bp = sub.add_parser(
+        "build-resume-pdf",
+        help="Render resume_meta.summary (Markdown) into a styled PDF and "
+        "point resume_meta.pdf_path at it.",
+    )
+    bp.add_argument("--out", help="Output path (defaults to frontend/static/resume-generated.pdf)")
+    bp.set_defaults(func=_cmd_build_resume_pdf)
 
     args = p.parse_args(argv)
     args.func(args)
