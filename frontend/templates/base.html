@@ -70,7 +70,14 @@
   </main>
 
   <footer class="site-footer">
-    <small>&copy; {{ site.name }} · <a href="/admin">Admin</a></small>
+    <small>&copy; {{ site.name }}</small>
+    <small class="site-footer__owner">
+      {% if request.session.get('user_id') %}
+        <a href="/admin">Edit this site</a>
+      {% else %}
+        <a href="/admin/login">Site owner? Sign in to edit</a>
+      {% endif %}
+    </small>
   </footer>
 </body>
 </html>

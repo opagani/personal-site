@@ -180,7 +180,12 @@ a:hover { text-decoration: underline; }
   border-top: 1px solid var(--border);
   color: var(--muted);
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  align-items: center;
 }
+.site-footer__owner { font-size: 0.8rem; opacity: 0.85; }
 
 /* --- Admin --- */
 
