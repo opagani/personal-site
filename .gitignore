@@ -15,3 +15,6 @@ wheels/
 # Database + secrets
 site.db
 .env
+
+# Claude local config (machine-specific permissions, skills cache)
+.claude/
