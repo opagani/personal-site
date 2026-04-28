@@ -1,0 +1,24 @@
+{% extends "admin/base.html" %}
+{% block title %}{{ "New" if is_new else "Edit" }} project · {{ site.name }}{% endblock %}
+
+{% block admin %}
+<p><a href="/admin/projects">← back to projects</a></p>
+<h1>{{ "New project" if is_new else "Edit project" }}</h1>
+
+<form method="post" action="{{ '/admin/projects/new' if is_new else '/admin/projects/' ~ project.id }}" class="admin-form">
+  <input type="hidden" name="csrf" value="{{ csrf_token }}">
+  <label>Title
+    <input name="title" value="{{ project.title or '' }}" required>
+  </label>
+  <label>Description
+    <textarea name="description" rows="5" required>{{ project.description or '' }}</textarea>
+  </label>
+  <label>Link (optional)
+    <input name="link" value="{{ project.link or '' }}">
+  </label>
+  <label>Position (lower = earlier)
+    <input name="position" type="number" value="{{ project.position if project.position is not none else 0 }}">
+  </label>
+  <button type="submit">{{ "Create" if is_new else "Save" }}</button>
+</form>
+{% endblock %}

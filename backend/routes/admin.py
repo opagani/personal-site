@@ -1,4 +1,5 @@
 from pathlib import Path
+from types import SimpleNamespace
 
 from fastapi import APIRouter, Depends, Form, HTTPException, Request
 from fastapi.responses import RedirectResponse
@@ -16,7 +17,7 @@ from backend.auth import (
     verify_password,
 )
 from backend.db import get_db
-from backend.models import ResumeMeta, SiteMeta, User
+from backend.models import Project, ResumeMeta, SiteMeta, User
 
 ROOT = Path(__file__).resolve().parent.parent.parent
 templates = Jinja2Templates(directory=ROOT / "frontend" / "templates")
@@ -196,3 +197,123 @@ def resume_save(
     rm.pdf_path = pdf_path or None
     db.commit()
     return RedirectResponse(url="/admin/resume", status_code=303)
+
+
+# --- projects CRUD ---
+
+
+@router.get("/projects")
+def projects_list(
+    request: Request,
+    db: Session = Depends(get_db),
+    user: User = Depends(requires_admin),
+):
+    rows = db.scalars(select(Project).order_by(Project.position, Project.id)).all()
+    return templates.TemplateResponse(
+        request,
+        "admin/project_list.html",
+        {
+            "site": _site_meta(db),
+            "projects": rows,
+            "user": user,
+            "csrf_token": ensure_csrf_token(request),
+            "current_page": None,
+        },
+    )
+
+
+@router.get("/projects/new")
+def project_new_form(
+    request: Request,
+    db: Session = Depends(get_db),
+    user: User = Depends(requires_admin),
+):
+    blank = SimpleNamespace(id=None, title="", description="", link="", position=0)
+    return templates.TemplateResponse(
+        request,
+        "admin/project_form.html",
+        {
+            "site": _site_meta(db),
+            "project": blank,
+            "is_new": True,
+            "user": user,
+            "csrf_token": ensure_csrf_token(request),
+            "current_page": None,
+        },
+    )
+
+
+@router.post("/projects/new")
+def project_create(
+    request: Request,
+    db: Session = Depends(get_db),
+    user: User = Depends(requires_admin_post),
+    title: str = Form(...),
+    description: str = Form(...),
+    link: str = Form(""),
+    position: int = Form(0),
+):
+    db.add(Project(title=title, description=description, link=link or None, position=position))
+    db.commit()
+    return RedirectResponse(url="/admin/projects", status_code=303)
+
+
+@router.get("/projects/{project_id}")
+def project_edit_form(
+    project_id: int,
+    request: Request,
+    db: Session = Depends(get_db),
+    user: User = Depends(requires_admin),
+):
+    p = db.scalar(select(Project).where(Project.id == project_id))
+    if p is None:
+        raise HTTPException(status_code=404, detail="Project not found")
+    return templates.TemplateResponse(
+        request,
+        "admin/project_form.html",
+        {
+            "site": _site_meta(db),
+            "project": p,
+            "is_new": False,
+            "user": user,
+            "csrf_token": ensure_csrf_token(request),
+            "current_page": None,
+        },
+    )
+
+
+@router.post("/projects/{project_id}")
+def project_update(
+    project_id: int,
+    request: Request,
+    db: Session = Depends(get_db),
+    user: User = Depends(requires_admin_post),
+    title: str = Form(...),
+    description: str = Form(...),
+    link: str = Form(""),
+    position: int = Form(0),
+):
+    p = db.scalar(select(Project).where(Project.id == project_id))
+    if p is None:
+        raise HTTPException(status_code=404, detail="Project not found")
+    p.title = title
+    p.description = description
+    p.link = link or None
+    p.position = position
+    db.commit()
+    return RedirectResponse(url="/admin/projects", status_code=303)
+
+
+@router.post("/projects/{project_id}/delete")
+def project_delete(
+    project_id: int,
+    request: Request,
+    db: Session = Depends(get_db),
+    user: User = Depends(requires_admin_post),
+):
+    p = db.scalar(select(Project).where(Project.id == project_id))
+    if p is None:
+        raise HTTPException(status_code=404, detail="Project not found")
+    db.delete(p)
+    db.commit()
+    return RedirectResponse(url="/admin/projects", status_code=303)

@@ -1,0 +1,26 @@
+{% extends "admin/base.html" %}
+{% block title %}Projects · {{ site.name }}{% endblock %}
+
+{% block admin %}
+<p><a href="/admin">← back to dashboard</a></p>
+<h1>Projects</h1>
+<p><a class="button" href="/admin/projects/new">+ New project</a></p>
+
+{% if projects %}
+  <ul class="admin-list">
+    {% for p in projects %}
+      <li>
+        <strong><a href="/admin/projects/{{ p.id }}">{{ p.title }}</a></strong>
+        <span class="muted">(position {{ p.position }})</span>
+        <form method="post" action="/admin/projects/{{ p.id }}/delete" style="display:inline">
+          <input type="hidden" name="csrf" value="{{ csrf_token }}">
+          <button class="link-button" type="submit"
+                  onclick="return confirm('Delete &quot;{{ p.title }}&quot;?');">delete</button>
+        </form>
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p class="muted">No projects yet.</p>
+{% endif %}
+{% endblock %}
