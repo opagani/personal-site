@@ -11,3 +11,7 @@ wheels/
 
 # Superpowers brainstorming session artifacts
 .superpowers/
+
+# Database + secrets
+site.db
+.env
