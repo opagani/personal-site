@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block title %}{{ site.name }}{% endblock %}</title>
-  <link rel="stylesheet" href="{{ url_for('static', path='styles.css') }}">
+  <link rel="stylesheet" href="{{ url_for('assets', path='styles.css') }}">
   <script>
     // Apply persisted theme before paint to avoid flash of wrong colors.
     (function () {

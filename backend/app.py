@@ -127,6 +127,10 @@ def _debug_static_endpoint():
 
 
 app.mount("/static", StaticFiles(directory=ROOT / "frontend" / "static"), name="static")
+# Some platforms (Railway/Fastly) intercept /static/* at the edge. Mount the
+# same directory at /assets/* as a fallback so url_for('assets', path=...)
+# bypasses any edge handling.
+app.mount("/assets", StaticFiles(directory=ROOT / "frontend" / "static"), name="assets")
 app.include_router(public_router)
 app.include_router(blog_router)
 app.include_router(admin_router)
