@@ -319,3 +319,6 @@ a:hover { text-decoration: underline; }
 }
 
 .hp { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+
+.admin-checkbox { display: flex; flex-direction: row !important; align-items: center; gap: 0.5rem; }
+.admin-checkbox input { width: auto; }

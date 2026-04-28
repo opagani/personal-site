@@ -1,3 +1,4 @@
+from datetime import datetime, timezone
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -16,8 +17,9 @@ from backend.auth import (
     verify_csrf,
     verify_password,
 )
+from backend.blog_utils import slugify, unique_slug
 from backend.db import get_db
-from backend.models import Link, Project, ResumeMeta, SiteMeta, User
+from backend.models import Comment, Link, Post, Project, ResumeMeta, SiteMeta, User
 
 ROOT = Path(__file__).resolve().parent.parent.parent
 templates = Jinja2Templates(directory=ROOT / "frontend" / "templates")
@@ -434,3 +436,160 @@ def link_delete(
     db.delete(link)
     db.commit()
     return RedirectResponse(url="/admin/links", status_code=303)
+
+
+# --- posts CRUD ---
+
+
+@router.get("/posts")
+def posts_list(
+    request: Request,
+    db: Session = Depends(get_db),
+    user: User = Depends(requires_admin),
+):
+    rows = db.scalars(
+        select(Post).order_by(Post.published.asc(), Post.updated_at.desc())
+    ).all()
+    return templates.TemplateResponse(
+        request,
+        "admin/post_list.html",
+        {
+            "site": _site_meta(db),
+            "posts": rows,
+            "user": user,
+            "csrf_token": ensure_csrf_token(request),
+            "current_page": None,
+        },
+    )
+
+
+def _post_form_context(request, db, *, post, is_new, user):
+    return {
+        "site": _site_meta(db),
+        "post": post,
+        "is_new": is_new,
+        "user": user,
+        "csrf_token": ensure_csrf_token(request),
+        "current_page": None,
+    }
+
+
+@router.get("/posts/new")
+def post_new_form(
+    request: Request,
+    db: Session = Depends(get_db),
+    user: User = Depends(requires_admin),
+):
+    blank = SimpleNamespace(
+        id=None, title="", slug="", excerpt="", body_md="", published=False
+    )
+    return templates.TemplateResponse(
+        request, "admin/post_form.html",
+        _post_form_context(request, db, post=blank, is_new=True, user=user),
+    )
+
+
+@router.post("/posts/new")
+def post_create(
+    request: Request,
+    db: Session = Depends(get_db),
+    user: User = Depends(requires_admin_post),
+    title: str = Form(...),
+    slug: str = Form(""),
+    excerpt: str = Form(""),
+    body_md: str = Form(...),
+    published: str = Form(""),
+):
+    base = slugify(slug.strip()) if slug.strip() else slugify(title)
+    final_slug = unique_slug(db, base)
+    is_published = bool(published)
+    p = Post(
+        slug=final_slug,
+        title=title.strip(),
+        excerpt=(excerpt.strip() or None),
+        body_md=body_md,
+        published=is_published,
+        published_at=datetime.now(timezone.utc) if is_published else None,
+    )
+    db.add(p)
+    db.commit()
+    return RedirectResponse(url="/admin/posts", status_code=303)
+
+
+@router.get("/posts/{post_id}")
+def post_edit_form(
+    post_id: int,
+    request: Request,
+    db: Session = Depends(get_db),
+    user: User = Depends(requires_admin),
+):
+    p = db.scalar(select(Post).where(Post.id == post_id))
+    if p is None:
+        raise HTTPException(status_code=404, detail="Post not found")
+    return templates.TemplateResponse(
+        request, "admin/post_form.html",
+        _post_form_context(request, db, post=p, is_new=False, user=user),
+    )
+
+
+@router.post("/posts/{post_id}")
+def post_update(
+    post_id: int,
+    request: Request,
+    db: Session = Depends(get_db),
+    user: User = Depends(requires_admin_post),
+    title: str = Form(...),
+    slug: str = Form(""),
+    excerpt: str = Form(""),
+    body_md: str = Form(...),
+    published: str = Form(""),
+):
+    p = db.scalar(select(Post).where(Post.id == post_id))
+    if p is None:
+        raise HTTPException(status_code=404, detail="Post not found")
+
+    base = slugify(slug.strip()) if slug.strip() else slugify(title)
+    p.slug = unique_slug(db, base, exclude_id=p.id)
+    p.title = title.strip()
+    p.excerpt = excerpt.strip() or None
+    p.body_md = body_md
+
+    new_pub = bool(published)
+    if new_pub and not p.published and p.published_at is None:
+        p.published_at = datetime.now(timezone.utc)
+    p.published = new_pub
+    db.commit()
+    return RedirectResponse(url="/admin/posts", status_code=303)
+
+
+@router.post("/posts/{post_id}/publish")
+def post_publish_toggle(
+    post_id: int,
+    request: Request,
+    db: Session = Depends(get_db),
+    user: User = Depends(requires_admin_post),
+):
+    p = db.scalar(select(Post).where(Post.id == post_id))
+    if p is None:
+        raise HTTPException(status_code=404, detail="Post not found")
+    new_state = not p.published
+    if new_state and p.published_at is None:
+        p.published_at = datetime.now(timezone.utc)
+    p.published = new_state
+    db.commit()
+    return RedirectResponse(url="/admin/posts", status_code=303)
+
+
+@router.post("/posts/{post_id}/delete")
+def post_delete(
+    post_id: int,
+    request: Request,
+    db: Session = Depends(get_db),
+    user: User = Depends(requires_admin_post),
+):
+    p = db.scalar(select(Post).where(Post.id == post_id))
+    if p is None:
+        raise HTTPException(status_code=404, detail="Post not found")
+    db.delete(p)
+    db.commit()
+    return RedirectResponse(url="/admin/posts", status_code=303)

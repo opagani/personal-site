@@ -1,0 +1,34 @@
+{% extends "admin/base.html" %}
+{% block title %}{{ "New" if is_new else "Edit" }} post · {{ site.name }}{% endblock %}
+
+{% block admin %}
+<p><a href="/admin/posts">← back to posts</a></p>
+<h1>{{ "New post" if is_new else "Edit post" }}</h1>
+
+<form method="post" action="{{ '/admin/posts/new' if is_new else '/admin/posts/' ~ post.id }}" class="admin-form">
+  <input type="hidden" name="csrf" value="{{ csrf_token }}">
+  <label>Title
+    <input name="title" value="{{ post.title or '' }}" required maxlength="200">
+  </label>
+  <label>Slug
+    <input name="slug" value="{{ post.slug or '' }}" maxlength="120">
+    <small class="muted">Leave blank to auto-generate from the title.</small>
+  </label>
+  <label>Excerpt (optional)
+    <textarea name="excerpt" rows="2">{{ post.excerpt or '' }}</textarea>
+    <small class="muted">Short blurb shown on the blog list page.</small>
+  </label>
+  <label>Body
+    <textarea name="body_md" rows="22" required>{{ post.body_md or '' }}</textarea>
+    <small class="muted">
+      Markdown supported. <code>## heading</code>, <code>**bold**</code>,
+      <code>- bullet</code>. Blank lines separate blocks.
+    </small>
+  </label>
+  <label class="admin-checkbox">
+    <input type="checkbox" name="published" {% if post.published %}checked{% endif %}>
+    Published
+  </label>
+  <button type="submit">{{ "Create" if is_new else "Save" }}</button>
+</form>
+{% endblock %}
