@@ -8,8 +8,9 @@
   --max-width: 65ch;
 }
 
+/* System dark mode applies only when the user hasn't picked an explicit theme. */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --bg: #111113;
     --fg: #eaeaea;
     --muted: #9a9a9a;
@@ -17,6 +18,16 @@
     --border: #2a2a2e;
     --card-bg: #18181b;
   }
+}
+
+/* Explicit dark, regardless of system. */
+:root[data-theme="dark"] {
+  --bg: #111113;
+  --fg: #eaeaea;
+  --muted: #9a9a9a;
+  --accent: #7aa2ff;
+  --border: #2a2a2e;
+  --card-bg: #18181b;
 }
 
 * { box-sizing: border-box; }
@@ -68,6 +79,18 @@ a:hover { text-decoration: underline; }
   color: var(--fg);
   font-weight: 500;
 }
+
+.theme-toggle {
+  font: inherit;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  padding: 0.25rem 0.6rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+.theme-toggle:hover { color: var(--fg); }
 
 .site-main {
   max-width: var(--max-width);

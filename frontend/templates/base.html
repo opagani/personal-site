@@ -5,6 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block title %}{{ site.name }}{% endblock %}</title>
   <link rel="stylesheet" href="{{ url_for('static', path='styles.css') }}">
+  <script>
+    // Apply persisted theme before paint to avoid flash of wrong colors.
+    (function () {
+      var t = localStorage.getItem('theme');
+      if (t === 'light' || t === 'dark') {
+        document.documentElement.setAttribute('data-theme', t);
+      }
+    })();
+  </script>
 </head>
 <body>
   <header class="site-header">
@@ -17,15 +26,51 @@
       {% for slug, href, label in nav %}
         <a href="{{ href }}"{% if slug == current_page %} aria-current="page"{% endif %}>{{ label }}</a>
       {% endfor %}
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle color theme">Theme: auto</button>
     </nav>
   </header>
+
+  <script>
+    // Cycle: auto (no override) → light → dark → auto. Persisted in localStorage.
+    (function () {
+      var btn = document.getElementById('theme-toggle');
+      if (!btn) return;
+      var root = document.documentElement;
+
+      function current() {
+        return localStorage.getItem('theme') || 'auto';
+      }
+      function render() {
+        var t = current();
+        btn.textContent = 'Theme: ' + t;
+      }
+      function next(t) {
+        return t === 'auto' ? 'light' : t === 'light' ? 'dark' : 'auto';
+      }
+      function apply(t) {
+        if (t === 'auto') {
+          root.removeAttribute('data-theme');
+          localStorage.removeItem('theme');
+        } else {
+          root.setAttribute('data-theme', t);
+          localStorage.setItem('theme', t);
+        }
+      }
+
+      render();
+      btn.addEventListener('click', function () {
+        apply(next(current()));
+        render();
+      });
+    })();
+  </script>
 
   <main class="site-main">
     {% block content %}{% endblock %}
   </main>
 
   <footer class="site-footer">
-    <small>&copy; {{ site.name }}</small>
+    <small>&copy; {{ site.name }} · <a href="/admin">Admin</a></small>
   </footer>
 </body>
 </html>
