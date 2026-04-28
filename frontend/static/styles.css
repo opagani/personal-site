@@ -158,3 +158,86 @@ a:hover { text-decoration: underline; }
   color: var(--muted);
   text-align: center;
 }
+
+/* --- Admin --- */
+
+.admin-banner {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.5rem 0.85rem;
+  margin: 0 0 1.5rem;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+.admin-banner strong { color: var(--fg); }
+
+.link-button {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--accent);
+  cursor: pointer;
+  font: inherit;
+  text-decoration: underline;
+}
+
+.admin-form {
+  display: grid;
+  gap: 1rem;
+  max-width: 100%;
+}
+.admin-form label {
+  display: grid;
+  gap: 0.35rem;
+  font-weight: 500;
+}
+.admin-form input,
+.admin-form textarea {
+  font: inherit;
+  padding: 0.5rem 0.65rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--fg);
+  width: 100%;
+}
+.admin-form button {
+  justify-self: start;
+  padding: 0.55rem 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: var(--bg);
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.admin-list {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+.admin-list li {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.55rem 0.85rem;
+}
+
+.admin-nav {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.error {
+  color: #b91c1c;
+  background: #fee2e2;
+  padding: 0.55rem 0.85rem;
+  border-radius: 6px;
+}
+@media (prefers-color-scheme: dark) {
+  .error { color: #fecaca; background: #3f1d1d; }
+}
