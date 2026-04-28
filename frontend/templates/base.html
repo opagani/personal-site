@@ -72,13 +72,13 @@
 
   <footer class="site-footer">
     <small>&copy; {{ site.name }}</small>
-    <small class="site-footer__owner">
+    <div class="site-footer__owner">
       {% if request.session.get('user_id') %}
-        <a href="/admin">Edit this site</a>
+        <a class="footer-btn" href="/admin">Edit site</a>
       {% else %}
-        <a href="/admin/login">Site owner? Sign in to edit</a>
+        <a class="footer-btn footer-btn--ghost" href="/admin/login" title="Site owner sign-in">Sign in</a>
       {% endif %}
-    </small>
+    </div>
   </footer>
 </body>
 </html>
