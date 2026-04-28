@@ -58,8 +58,29 @@ def _resolve_secret_key() -> str:
     return _secrets.token_urlsafe(32)
 
 
+def _debug_static_paths() -> None:
+    """One-shot startup diagnostic for missing static assets on Railway/etc."""
+    static_dir = ROOT / "frontend" / "static"
+    templates_dir = ROOT / "frontend" / "templates"
+    log.warning("STATIC-DEBUG ROOT=%s exists=%s", ROOT, ROOT.is_dir())
+    log.warning(
+        "STATIC-DEBUG frontend/=%s frontend/static/=%s frontend/templates/=%s",
+        (ROOT / "frontend").is_dir(),
+        static_dir.is_dir(),
+        templates_dir.is_dir(),
+    )
+    if static_dir.is_dir():
+        names = sorted(p.name for p in static_dir.iterdir())
+        log.warning("STATIC-DEBUG contents of frontend/static/: %s", names)
+    log.warning(
+        "STATIC-DEBUG styles.css exists=%s",
+        (static_dir / "styles.css").is_file(),
+    )
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    _debug_static_paths()
     Base.metadata.create_all(engine)
     with SessionLocal() as db:
         _seed_singletons(db)
