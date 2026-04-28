@@ -1,0 +1,62 @@
+{% extends "admin/base.html" %}
+{% block title %}Comments · {{ site.name }}{% endblock %}
+
+{% block admin %}
+<p><a href="/admin">← back to dashboard</a></p>
+<h1>Comments</h1>
+
+<h2>Pending {% if pending %}<span class="muted">({{ pending|length }})</span>{% endif %}</h2>
+{% if pending %}
+  <ul class="admin-list">
+    {% for c in pending %}
+      {% set p = posts[c.post_id] %}
+      <li>
+        <p>
+          <strong>{{ c.author_name }}</strong>
+          <span class="muted">&lt;{{ c.author_email }}&gt;</span>
+          {% if p %}
+            on <a href="/blog/{{ p.slug }}">{{ p.title }}</a>
+          {% endif %}
+          <span class="muted">· {{ c.created_at.strftime('%b %-d, %Y %H:%M') }}</span>
+        </p>
+        <p style="white-space: pre-wrap">{{ c.body }}</p>
+        <form method="post" action="/admin/comments/{{ c.id }}/approve" style="display:inline">
+          <input type="hidden" name="csrf" value="{{ csrf_token }}">
+          <button class="link-button" type="submit">approve</button>
+        </form>
+        <form method="post" action="/admin/comments/{{ c.id }}/delete" style="display:inline">
+          <input type="hidden" name="csrf" value="{{ csrf_token }}">
+          <button class="link-button" type="submit"
+                  onclick="return confirm('Delete this comment?');">delete</button>
+        </form>
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p class="muted">Nothing pending.</p>
+{% endif %}
+
+<h2>Recently approved</h2>
+{% if approved %}
+  <ul class="admin-list">
+    {% for c in approved %}
+      {% set p = posts[c.post_id] %}
+      <li>
+        <p>
+          <strong>{{ c.author_name }}</strong>
+          {% if p %}on <a href="/blog/{{ p.slug }}">{{ p.title }}</a>{% endif %}
+          <span class="muted">· {{ c.approved_at.strftime('%b %-d, %Y') }}</span>
+        </p>
+        <p style="white-space: pre-wrap">{{ c.body }}</p>
+        <form method="post" action="/admin/comments/{{ c.id }}/delete" style="display:inline">
+          <input type="hidden" name="csrf" value="{{ csrf_token }}">
+          <button class="link-button" type="submit"
+                  onclick="return confirm('Delete this comment?');">delete</button>
+        </form>
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p class="muted">No approved comments yet.</p>
+{% endif %}
+{% endblock %}

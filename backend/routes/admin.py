@@ -593,3 +593,76 @@ def post_delete(
     db.delete(p)
     db.commit()
     return RedirectResponse(url="/admin/posts", status_code=303)
+
+
+# --- comment moderation ---
+
+
+@router.get("/comments")
+def comments_queue(
+    request: Request,
+    db: Session = Depends(get_db),
+    user: User = Depends(requires_admin),
+):
+    pending = db.scalars(
+        select(Comment)
+        .where(Comment.approved.is_(False))
+        .order_by(Comment.created_at.desc())
+    ).all()
+    approved = db.scalars(
+        select(Comment)
+        .where(Comment.approved.is_(True))
+        .order_by(Comment.approved_at.desc())
+        .limit(20)
+    ).all()
+    post_ids = {c.post_id for c in (*pending, *approved)}
+    posts = (
+        {p.id: p for p in db.scalars(select(Post).where(Post.id.in_(post_ids))).all()}
+        if post_ids
+        else {}
+    )
+    return templates.TemplateResponse(
+        request,
+        "admin/comment_queue.html",
+        {
+            "site": _site_meta(db),
+            "pending": pending,
+            "approved": approved,
+            "posts": posts,
+            "user": user,
+            "csrf_token": ensure_csrf_token(request),
+            "current_page": None,
+        },
+    )
+
+
+@router.post("/comments/{comment_id}/approve")
+def comment_approve(
+    comment_id: int,
+    request: Request,
+    db: Session = Depends(get_db),
+    user: User = Depends(requires_admin_post),
+):
+    c = db.scalar(select(Comment).where(Comment.id == comment_id))
+    if c is None:
+        raise HTTPException(status_code=404, detail="Comment not found")
+    if not c.approved:
+        c.approved = True
+        c.approved_at = datetime.now(timezone.utc)
+    db.commit()
+    return RedirectResponse(url="/admin/comments", status_code=303)
+
+
+@router.post("/comments/{comment_id}/delete")
+def comment_delete(
+    comment_id: int,
+    request: Request,
+    db: Session = Depends(get_db),
+    user: User = Depends(requires_admin_post),
+):
+    c = db.scalar(select(Comment).where(Comment.id == comment_id))
+    if c is None:
+        raise HTTPException(status_code=404, detail="Comment not found")
+    db.delete(c)
+    db.commit()
+    return RedirectResponse(url="/admin/comments", status_code=303)

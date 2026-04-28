@@ -175,3 +175,69 @@ def test_delete_post_cascades_to_comments(signed_in_client, db_factory):
 def test_get_unknown_post_returns_404(signed_in_client):
     r = signed_in_client.get("/admin/posts/9999")
     assert r.status_code == 404
+
+
+# --- comment moderation ---
+
+
+def _seed_post_with_comment(db_factory, *, approved: bool = False):
+    Session = db_factory
+    with Session() as s:
+        p = Post(slug="m", title="M", body_md="x", published=True)
+        s.add(p)
+        s.commit()
+        s.refresh(p)
+        c = Comment(
+            post_id=p.id,
+            author_name="Bob",
+            author_email="bob@example.com",
+            body="Awaiting review",
+            approved=approved,
+        )
+        s.add(c)
+        s.commit()
+        return p.id, c.id
+
+
+def test_admin_comment_queue_lists_pending(signed_in_client, db_factory):
+    _seed_post_with_comment(db_factory, approved=False)
+    r = signed_in_client.get("/admin/comments")
+    assert r.status_code == 200
+    assert "Awaiting review" in r.text
+    assert "Bob" in r.text
+
+
+def test_approve_comment_makes_it_public(
+    signed_in_client, client, db_factory
+):
+    _, cid = _seed_post_with_comment(db_factory, approved=False)
+    csrf = _csrf(signed_in_client, "/admin/comments")
+    r = signed_in_client.post(
+        f"/admin/comments/{cid}/approve",
+        data={"csrf": csrf},
+        follow_redirects=False,
+    )
+    assert r.status_code == 303
+
+    Session = db_factory
+    with Session() as s:
+        c = s.scalar(select(Comment).where(Comment.id == cid))
+        assert c.approved is True
+        assert c.approved_at is not None
+
+    r = client.get("/blog/m")
+    assert "Awaiting review" in r.text
+
+
+def test_delete_comment_from_admin(signed_in_client, db_factory):
+    _, cid = _seed_post_with_comment(db_factory, approved=False)
+    csrf = _csrf(signed_in_client, "/admin/comments")
+    r = signed_in_client.post(
+        f"/admin/comments/{cid}/delete",
+        data={"csrf": csrf},
+        follow_redirects=False,
+    )
+    assert r.status_code == 303
+    Session = db_factory
+    with Session() as s:
+        assert s.scalar(select(Comment).where(Comment.id == cid)) is None
