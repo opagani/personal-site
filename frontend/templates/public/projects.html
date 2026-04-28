@@ -11,4 +11,33 @@
     </li>
   {% endfor %}
 </ul>
+
+{% if page_info and page_info.total_pages > 1 %}
+  <nav class="pagination" aria-label="Pages">
+    {% if page_info.has_prev %}
+      <a class="pagination__btn" href="?page={{ page_info.page - 1 }}" rel="prev" aria-label="Previous page">‹</a>
+    {% else %}
+      <span class="pagination__btn pagination__btn--disabled" aria-hidden="true">‹</span>
+    {% endif %}
+
+    {% for p in page_info.pages %}
+      {% if p is none %}
+        <span class="pagination__ellipsis" aria-hidden="true">…</span>
+      {% elif p == page_info.page %}
+        <span class="pagination__btn pagination__btn--current" aria-current="page">{{ p }}</span>
+      {% else %}
+        <a class="pagination__btn" href="?page={{ p }}">{{ p }}</a>
+      {% endif %}
+    {% endfor %}
+
+    {% if page_info.has_next %}
+      <a class="pagination__btn" href="?page={{ page_info.page + 1 }}" rel="next" aria-label="Next page">›</a>
+    {% else %}
+      <span class="pagination__btn pagination__btn--disabled" aria-hidden="true">›</span>
+    {% endif %}
+  </nav>
+  <p class="pagination__count muted">
+    Page {{ page_info.page }} of {{ page_info.total_pages }} · {{ page_info.total }} projects
+  </p>
+{% endif %}
 {% endblock %}

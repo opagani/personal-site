@@ -2,12 +2,15 @@ from pathlib import Path
 
 from fastapi import APIRouter, Depends, Request
 from fastapi.templating import Jinja2Templates
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from backend.db import get_db
 from backend.markdown import render_markdown
 from backend.models import Link, Project, ResumeMeta, SiteMeta
+from backend.pagination import offset, paginate
+
+PROJECTS_PER_PAGE = 10
 
 ROOT = Path(__file__).resolve().parent.parent.parent
 templates = Jinja2Templates(directory=ROOT / "frontend" / "templates")
@@ -29,12 +32,24 @@ def home(request: Request, db: Session = Depends(get_db)):
 
 
 @router.get("/projects")
-def projects(request: Request, db: Session = Depends(get_db)):
-    rows = db.scalars(select(Project).order_by(Project.position, Project.id)).all()
+def projects(request: Request, page: int = 1, db: Session = Depends(get_db)):
+    total = db.scalar(select(func.count(Project.id))) or 0
+    page_info = paginate(total, page, PROJECTS_PER_PAGE)
+    rows = db.scalars(
+        select(Project)
+        .order_by(Project.position, Project.id)
+        .offset(offset(page_info))
+        .limit(page_info.per_page)
+    ).all()
     return templates.TemplateResponse(
         request,
         "public/projects.html",
-        {"site": _site(db), "projects": rows, "current_page": "projects"},
+        {
+            "site": _site(db),
+            "projects": rows,
+            "page_info": page_info,
+            "current_page": "projects",
+        },
     )
 
 

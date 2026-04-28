@@ -73,3 +73,30 @@ def test_static_styles_served(client):
     r = client.get("/static/styles.css")
     assert r.status_code == 200
     assert r.headers["content-type"].startswith("text/css")
+
+
+def test_projects_paginates_when_more_than_per_page(client, db_factory):
+    Session = db_factory
+    with Session() as s:
+        for i in range(14):  # plus the existing 1 → 15 total → 2 pages of 10
+            s.add(Project(title=f"Extra-{i:02d}", description="x", position=100 + i))
+        s.commit()
+
+    # Page 1
+    r = client.get("/projects")
+    assert r.status_code == 200
+    assert "?page=2" in r.text  # paginator link rendered
+
+    # Page 2
+    r = client.get("/projects?page=2")
+    assert r.status_code == 200
+    # At least one of the high-position items lives on page 2
+    assert any(f"Extra-{i:02d}" in r.text for i in range(10, 14))
+
+
+def test_projects_no_paginator_when_few(client):
+    # Only the seeded "Note G" — 1 project, well under per_page → no paginator.
+    r = client.get("/projects")
+    assert r.status_code == 200
+    assert "pagination" not in r.text
+    assert "?page=" not in r.text
