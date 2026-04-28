@@ -1,45 +1,27 @@
-import pytest
-from fastapi.testclient import TestClient
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.pool import StaticPool
+"""Public-route tests use the shared `client` fixture from conftest.py and
+add their own seeded projects/links via the underlying db_factory."""
 
-from backend.app import app
-from backend.db import Base, get_db
-from backend.models import Link, Project, ResumeMeta, SiteMeta
+import pytest
+
+from backend.models import Link, Project
 
 
 @pytest.fixture
-def client():
-    # StaticPool keeps a single in-memory DB shared across connections;
-    # default SQLite pooling gives each connection its own empty :memory: DB.
-    engine = create_engine(
-        "sqlite:///:memory:",
-        future=True,
-        connect_args={"check_same_thread": False},
-        poolclass=StaticPool,
-    )
-    Base.metadata.create_all(engine)
-    TestSession = sessionmaker(bind=engine, autoflush=False, autocommit=False, future=True)
-
-    with TestSession() as s:
-        s.add(SiteMeta(id=1, name="Ada Lovelace", headline="Mathematician", bio="Notes."))
-        s.add(ResumeMeta(id=1, summary="Long-form summary.", pdf_path="/static/resume.pdf"))
-        s.add(Project(title="Note G", description="The first algorithm.", link="https://example.com", position=0))
+def client(client, db_factory):
+    """Extend the shared client fixture with a seeded project + link."""
+    Session = db_factory
+    with Session() as s:
+        s.add(
+            Project(
+                title="Note G",
+                description="The first algorithm.",
+                link="https://example.com",
+                position=0,
+            )
+        )
         s.add(Link(label="GitHub", url="https://github.com/ada", position=0))
         s.commit()
-
-    def override_get_db():
-        db = TestSession()
-        try:
-            yield db
-        finally:
-            db.close()
-
-    app.dependency_overrides[get_db] = override_get_db
-    # No `with`: skip lifespan so tests don't touch the real site.db
-    yield TestClient(app)
-    app.dependency_overrides.clear()
+    return client
 
 
 def test_home_renders_site_meta(client):
@@ -48,6 +30,11 @@ def test_home_renders_site_meta(client):
     assert "Ada Lovelace" in r.text
     assert "Mathematician" in r.text
     assert 'aria-current="page"' in r.text
+
+
+def test_home_uses_seeded_bio(client):
+    r = client.get("/")
+    assert "Notes." in r.text
 
 
 def test_projects_renders_db_rows(client):
@@ -67,7 +54,7 @@ def test_contact_renders_links(client):
 def test_resume_renders_summary_and_handles_missing_pdf(client):
     r = client.get("/resume")
     assert r.status_code == 200
-    assert "Long-form summary." in r.text
+    assert "Summary text." in r.text
     assert "PDF not yet uploaded" in r.text
 
 

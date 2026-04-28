@@ -1,4 +1,5 @@
 import logging
+import secrets as _secrets
 from contextlib import asynccontextmanager
 from pathlib import Path
 
@@ -6,10 +7,13 @@ from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy import select
 from sqlalchemy.orm import Session
+from starlette.middleware.sessions import SessionMiddleware
 
 from backend.db import Base, SessionLocal, engine
 from backend.models import ResumeMeta, SiteMeta, User
+from backend.routes.admin import router as admin_router
 from backend.routes.public import router as public_router
+from backend.settings import settings
 
 ROOT = Path(__file__).resolve().parent.parent
 log = logging.getLogger("portfolio")
@@ -44,6 +48,15 @@ def _warn_if_no_admin(db: Session) -> None:
         log.warning("No admin user. Run: uv run python -m backend.cli create-admin")
 
 
+def _resolve_secret_key() -> str:
+    if settings.secret_key:
+        return settings.secret_key
+    if settings.env == "prod":
+        raise RuntimeError("SECRET_KEY must be set when ENV=prod")
+    log.warning("SECRET_KEY not set, using ephemeral key (sessions die on restart)")
+    return _secrets.token_urlsafe(32)
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     Base.metadata.create_all(engine)
@@ -54,5 +67,16 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
+
+app.add_middleware(
+    SessionMiddleware,
+    secret_key=_resolve_secret_key(),
+    session_cookie="portfolio_session",
+    max_age=settings.session_max_age,
+    same_site="lax",
+    https_only=(settings.env == "prod"),
+)
+
 app.mount("/static", StaticFiles(directory=ROOT / "frontend" / "static"), name="static")
 app.include_router(public_router)
+app.include_router(admin_router)

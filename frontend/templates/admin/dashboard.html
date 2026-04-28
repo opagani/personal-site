@@ -1,0 +1,12 @@
+{% extends "admin/base.html" %}
+{% block title %}Dashboard · {{ site.name }}{% endblock %}
+
+{% block admin %}
+<h1>Dashboard</h1>
+<ul class="admin-nav">
+  <li><a href="/admin/site">Edit site (name, headline, bio)</a></li>
+  <li><a href="/admin/projects">Manage projects</a></li>
+  <li><a href="/admin/links">Manage contact links</a></li>
+  <li><a href="/admin/resume">Edit resume</a></li>
+</ul>
+{% endblock %}

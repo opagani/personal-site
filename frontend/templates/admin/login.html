@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Admin login · {{ site.name }}{% endblock %}
+
+{% block content %}
+<h1>Admin login</h1>
+
+{% if error %}
+  <p class="error">{{ error }}</p>
+{% endif %}
+
+{% if not configured %}
+  <p class="muted">
+    No admin user exists yet. Run
+    <code>uv run python -m backend.cli create-admin</code> to create one.
+  </p>
+{% else %}
+  <form method="post" action="/admin/login" class="auth-form admin-form">
+    <input type="hidden" name="csrf" value="{{ csrf_token }}">
+    <label>Username
+      <input name="username" required autofocus>
+    </label>
+    <label>Password
+      <input name="password" type="password" required>
+    </label>
+    <button type="submit">Sign in</button>
+  </form>
+{% endif %}
+{% endblock %}
