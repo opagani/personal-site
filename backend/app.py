@@ -109,19 +109,20 @@ def _debug_static_endpoint():
         "root": str(ROOT),
         "cwd": os.getcwd(),
         "root_exists": ROOT.is_dir(),
-        "root_listing": sorted(os.listdir(ROOT)) if ROOT.is_dir() else None,
-        "frontend_exists": (ROOT / "frontend").is_dir(),
-        "frontend_listing": (
-            sorted(os.listdir(ROOT / "frontend"))
-            if (ROOT / "frontend").is_dir()
-            else None
-        ),
         "static_dir_exists": static_dir.is_dir(),
         "static_dir_files": (
             sorted(os.listdir(static_dir)) if static_dir.is_dir() else None
         ),
         "styles_css_exists": (static_dir / "styles.css").is_file(),
         "__file__": __file__,
+        "routes": [
+            {
+                "path": getattr(r, "path", None),
+                "name": getattr(r, "name", None),
+                "type": type(r).__name__,
+            }
+            for r in app.routes
+        ],
     }
 
 
