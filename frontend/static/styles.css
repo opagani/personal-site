@@ -71,7 +71,6 @@ a:hover { text-decoration: underline; }
 }
 
 .brand {
-  font-weight: 600;
   color: var(--fg);
   font-size: 1.05rem;
 }
