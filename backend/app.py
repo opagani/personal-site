@@ -10,6 +10,7 @@ from sqlalchemy.orm import Session
 from starlette.middleware.sessions import SessionMiddleware
 from uvicorn.middleware.proxy_headers import ProxyHeadersMiddleware
 
+from backend.auth import hash_password
 from backend.db import Base, SessionLocal, engine
 from backend.models import ResumeMeta, SiteMeta, User
 from backend.routes.admin import router as admin_router
@@ -57,9 +58,27 @@ def _migrate_pdf_paths(db: Session) -> None:
         db.commit()
 
 
+def _bootstrap_admin_from_env(db: Session) -> None:
+    """If ADMIN_USERNAME + ADMIN_PASSWORD are set in env and no user exists,
+    create the admin user. Lets fresh deploys self-bootstrap without SSH."""
+    if not (settings.admin_username and settings.admin_password):
+        return
+    if db.scalar(select(User).limit(1)) is not None:
+        return
+    db.add(User(
+        username=settings.admin_username,
+        password_hash=hash_password(settings.admin_password),
+    ))
+    db.commit()
+    log.warning("Bootstrapped admin user '%s' from ADMIN_USERNAME env var", settings.admin_username)
+
+
 def _warn_if_no_admin(db: Session) -> None:
     if db.scalar(select(User).limit(1)) is None:
-        log.warning("No admin user. Run: uv run python -m backend.cli create-admin")
+        log.warning(
+            "No admin user. Either run `uv run python -m backend.cli create-admin`, "
+            "or set ADMIN_USERNAME and ADMIN_PASSWORD env vars and restart."
+        )
 
 
 def _resolve_secret_key() -> str:
@@ -79,6 +98,7 @@ async def lifespan(app: FastAPI):
     with SessionLocal() as db:
         _seed_singletons(db)
         _migrate_pdf_paths(db)
+        _bootstrap_admin_from_env(db)
         # If LOAD_FIXTURE_PATH is set, sync the DB to the JSON fixture on
         # every boot. This makes the committed JSON the source of truth —
         # any /admin edits made between deploys will be reset.

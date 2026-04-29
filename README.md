@@ -74,12 +74,10 @@ Sign into `/admin`. The dashboard links to:
    - `ENV=prod`
    - `SECRET_KEY=` — generate one locally: `python -c "import secrets; print(secrets.token_urlsafe(32))"`
    - `DATABASE_URL=sqlite:////data/site.db` *(four slashes — absolute path inside the volume)*
+   - `ADMIN_USERNAME=` and `ADMIN_PASSWORD=` — the lifespan will auto-create this admin user on first boot if no user exists yet.
+   - `LOAD_FIXTURE_PATH=data/content.json` — sync the DB to the committed JSON on every boot.
 4. Railway uses the included `Procfile` to start uvicorn on `$PORT`. Wait for the build to go green; click **View** to open the assigned `*.up.railway.app` URL.
-5. **Bootstrap the admin user** — open the service's shell/run-command and run:
-   ```
-   python -m backend.cli create-admin --username <you> --password <pw>
-   ```
-6. Sign in at `https://<your-app>.up.railway.app/admin/login`.
+5. Sign in at `https://<your-app>.up.railway.app/admin/login` with the `ADMIN_*` credentials you set above.
 7. *(Optional)* **Custom domain**: Settings → Networking → Custom Domain. HTTPS is auto-issued.
 
 Expected cost for a low-traffic personal site: roughly $3–5/mo on Railway's usage-based pricing.
