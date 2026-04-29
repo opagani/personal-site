@@ -71,8 +71,7 @@ a:hover { text-decoration: underline; }
 }
 
 .brand {
-  color: var(--fg);
-  font-size: 1.05rem;
+  color: var(--muted);
 }
 
 .site-nav {
