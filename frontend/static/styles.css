@@ -43,6 +43,15 @@ html, body {
   line-height: 1.6;
 }
 
+/* Sticky-footer layout: body fills the viewport, main grows, footer pinned. */
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+.site-main { flex: 1 0 auto; }
+.site-footer { flex-shrink: 0; }
+
 a {
   color: var(--accent);
   text-decoration: none;
