@@ -38,8 +38,18 @@
     </nav>
   </header>
 
+  <main class="site-main">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer">
+    <small>&copy; {{ site.name }}</small>
+    <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle color theme">Theme: auto</button>
+  </footer>
+
   <script>
     // Cycle: auto (no override) → light → dark → auto. Persisted in localStorage.
+    // Placed after the footer so #theme-toggle exists when this runs.
     (function () {
       var btn = document.getElementById('theme-toggle');
       if (!btn) return;
@@ -49,8 +59,7 @@
         return localStorage.getItem('theme') || 'auto';
       }
       function render() {
-        var t = current();
-        btn.textContent = 'Theme: ' + t;
+        btn.textContent = 'Theme: ' + current();
       }
       function next(t) {
         return t === 'auto' ? 'light' : t === 'light' ? 'dark' : 'auto';
@@ -72,14 +81,5 @@
       });
     })();
   </script>
-
-  <main class="site-main">
-    {% block content %}{% endblock %}
-  </main>
-
-  <footer class="site-footer">
-    <small>&copy; {{ site.name }}</small>
-    <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle color theme">Theme: auto</button>
-  </footer>
 </body>
 </html>
