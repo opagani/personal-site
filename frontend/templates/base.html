@@ -27,7 +27,6 @@
       {% for slug, href, label in nav %}
         <a href="{{ href }}"{% if slug == current_page %} aria-current="page"{% endif %}>{{ label }}</a>
       {% endfor %}
-      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle color theme">Theme: auto</button>
       {% if request.session.get('user_id') %}
         <form method="post" action="/admin/logout" class="header-auth-form">
           <input type="hidden" name="csrf" value="{{ request.session.get('csrf', '') }}">
@@ -80,6 +79,7 @@
 
   <footer class="site-footer">
     <small>&copy; {{ site.name }}</small>
+    <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle color theme">Theme: auto</button>
   </footer>
 </body>
 </html>
