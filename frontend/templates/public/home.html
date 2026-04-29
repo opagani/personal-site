@@ -2,8 +2,8 @@
 
 {% block content %}
 <section class="hero">
-  {% if site.avatar %}
-    <img class="avatar" src="{{ site.avatar }}" alt="{{ site.name }}">
+  {% if site.avatar_url %}
+    <img class="avatar" src="{{ site.avatar_url }}" alt="{{ site.name }}">
   {% endif %}
   <h1>{{ site.name }}</h1>
   <p class="headline">{{ site.headline }}</p>
