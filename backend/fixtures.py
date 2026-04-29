@@ -11,7 +11,7 @@ import json
 from datetime import datetime
 from pathlib import Path
 
-from sqlalchemy import func, select
+from sqlalchemy import delete, func, select
 from sqlalchemy.orm import Session
 
 from backend.models import Link, Post, Project, ResumeMeta, SiteMeta
@@ -77,11 +77,15 @@ def load_content(
     *,
     only_if_empty: bool = False,
 ) -> dict:
-    """Load a content dump into the DB. Returns counts of what was written.
+    """Sync the DB to match the fixture. Returns counts of what was written.
+
+    Singletons (site_meta, resume_meta) are upserted. List tables (projects,
+    links, posts) are *replaced* — anything not in the fixture is removed.
 
     `only_if_empty` skips the load entirely if any projects already exist —
-    used by the lifespan auto-load to avoid clobbering edits made after the
-    first deploy.
+    useful for one-off bootstraps where you don't want to clobber subsequent
+    admin edits. The lifespan auto-loader does NOT use this flag (the JSON
+    is the source of truth, always).
     """
     if isinstance(fixture, Path):
         fixture = json.loads(fixture.read_text())
@@ -93,6 +97,7 @@ def load_content(
 
     counts = {"projects": 0, "links": 0, "posts": 0, "site_meta": 0, "resume_meta": 0}
 
+    # Singletons: upsert.
     sm_data = fixture.get("site_meta")
     if sm_data:
         sm = db.scalar(select(SiteMeta).where(SiteMeta.id == 1))
@@ -117,7 +122,12 @@ def load_content(
             rm.pdf_path = rm_data.get("pdf_path")
         counts["resume_meta"] = 1
 
-    # Replace lists wholesale (only_if_empty already gates the destructive case).
+    # Lists: delete-and-insert for true sync. Comments cascade with posts via FK.
+    db.execute(delete(Post))
+    db.execute(delete(Link))
+    db.execute(delete(Project))
+    db.flush()
+
     for project in fixture.get("projects", []):
         db.add(Project(**project))
         counts["projects"] += 1

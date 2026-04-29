@@ -79,15 +79,15 @@ async def lifespan(app: FastAPI):
     with SessionLocal() as db:
         _seed_singletons(db)
         _migrate_pdf_paths(db)
-        # If LOAD_FIXTURE_PATH is set AND the DB has no projects yet, load
-        # content from the JSON fixture. Idempotent on subsequent boots
-        # because once projects exist the load is skipped.
+        # If LOAD_FIXTURE_PATH is set, sync the DB to the JSON fixture on
+        # every boot. This makes the committed JSON the source of truth —
+        # any /admin edits made between deploys will be reset.
         fixture_path = os.environ.get("LOAD_FIXTURE_PATH")
         if fixture_path:
             from pathlib import Path
             from backend.fixtures import load_content
             try:
-                result = load_content(db, Path(fixture_path), only_if_empty=True)
+                result = load_content(db, Path(fixture_path))
                 log.warning("LOAD_FIXTURE_PATH=%s result=%s", fixture_path, result)
             except Exception as e:
                 log.error("LOAD_FIXTURE_PATH failed: %s", e)
