@@ -92,6 +92,8 @@ a:hover { text-decoration: underline; }
 }
 .theme-toggle:hover { color: var(--fg); }
 
+.header-auth-form { display: inline-flex; margin: 0; padding: 0; }
+
 .site-main {
   max-width: var(--max-width);
   margin: 0 auto;

@@ -3,14 +3,7 @@
 {% block content %}
 <div class="admin-shell">
   <p class="admin-banner">
-    Admin
-    {% if user %}
-      · signed in as <strong>{{ user.username }}</strong>
-      <form method="post" action="/admin/logout" style="display:inline">
-        <input type="hidden" name="csrf" value="{{ csrf_token }}">
-        <button class="link-button" type="submit">log out</button>
-      </form>
-    {% endif %}
+    Admin{% if user %} · signed in as <strong>{{ user.username }}</strong>{% endif %}
   </p>
 
   {% block admin %}{% endblock %}
